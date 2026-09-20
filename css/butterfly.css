@@ -396,8 +396,8 @@ body {
 
 .mascot {
   position: relative;
-  width: 52px;
-  height: 52px;
+  width: 102px;
+  height: 122px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
