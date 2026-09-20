@@ -16,17 +16,14 @@
 </head>
 <body data-bg="artstudio">
 
-  <!-- Studio background -->
   <div class="bg-layer" aria-hidden="true"></div>
   <div class="bg-tint" aria-hidden="true"></div>
 
-  <!-- Sprite overlays -->
   <div class="sprite-layer" id="spriteButterflies" data-sprite="butterflies" aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteGlitter"     data-sprite="glitter"     aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteNotes"       data-sprite="notes"       aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteHearts"      data-sprite="hearts"      aria-hidden="true"></div>
 
-  <!-- Topbar: sprite toggles only -->
   <header class="topbar">
     <div class="toggles" role="group" aria-label="Sprite toggles">
       <button class="toggle toggle--on" data-toggle="butterflies" aria-pressed="true"  aria-label="Butterflies">🦋</button>
@@ -36,12 +33,10 @@
     </div>
   </header>
 
-  <!-- Main stage -->
   <main class="stage">
-
     <div class="palette-wrap">
 
-      <!-- Palette SVG -->
+      <!-- Palette -->
       <svg class="palette" viewBox="0 0 400 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <filter id="woodgrain" x="-5%" y="-5%" width="110%" height="110%">
@@ -69,7 +64,6 @@
                  C135 491 108 468 88 428
                  C55 366 22 288 22 205
                  C22 100 90 20 200 20 Z" />
-
         <path class="palette-rim"
               fill="none"
               stroke="rgba(140,95,55,0.28)"
@@ -81,16 +75,45 @@
                  C135 491 108 468 88 428
                  C55 366 22 288 22 205
                  C22 100 90 20 200 20 Z" />
-
         <ellipse class="palette-hole" cx="200" cy="455" rx="42" ry="26"
                  fill="#d9c19a" stroke="rgba(120,80,45,0.35)" stroke-width="2"/>
         <ellipse cx="200" cy="453" rx="36" ry="21" fill="#c8ad84" opacity="0.7"/>
       </svg>
 
-      <!-- Content overlay -->
+      <!-- Vial (top-left inside palette) -->
+      <div class="vial" id="vial" aria-hidden="true">
+        <svg viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="vialGlass" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+              <stop offset="40%" stop-color="rgba(255,255,255,0.25)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0.55)"/>
+            </linearGradient>
+            <linearGradient id="vialLiquid" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f7931e"/>
+              <stop offset="50%" stop-color="#e1306c"/>
+              <stop offset="100%" stop-color="#833ab4"/>
+            </linearGradient>
+          </defs>
+          <!-- cork -->
+          <rect x="14" y="2" width="12" height="8" rx="1" fill="#a97a4a" stroke="#6a4a2a" stroke-width="0.8"/>
+          <!-- neck -->
+          <rect x="15" y="9" width="10" height="6" fill="url(#vialGlass)" stroke="rgba(120,80,60,0.5)" stroke-width="0.6"/>
+          <!-- body -->
+          <path d="M12 15 q-3 6 -3 18 q0 16 3 22 q2 3 8 3 q6 0 8 -3 q3 -6 3 -22 q0 -12 -3 -18 z"
+                fill="url(#vialGlass)" stroke="rgba(120,80,60,0.55)" stroke-width="0.8"/>
+          <!-- liquid -->
+          <path d="M14 24 q-2 6 -2 14 q0 12 2 16 q1 2 6 2 q5 0 6 -2 q2 -4 2 -16 q0 -8 -2 -14 z"
+                fill="url(#vialLiquid)" opacity="0.85"/>
+          <!-- sparkles -->
+          <circle cx="18" cy="14" r="0.9" fill="#fff8e0" opacity="0.9"/>
+          <circle cx="24" cy="20" r="0.7" fill="#fff8e0" opacity="0.8"/>
+        </svg>
+      </div>
+
+      <!-- Swipes -->
       <div class="palette-content">
 
-        <!-- Swipes -->
         <div class="group group--painting">
           <a class="swipe swipe--ig-paint" href="#" target="_blank" rel="noopener" aria-label="Painting Instagram">
             <span class="swipe-reveal">
@@ -175,33 +198,55 @@
           </a>
         </div>
 
-        <a class="portfolio-swipe" href="#" target="_blank" rel="noopener" aria-label="Portfolio">
+        <a class="swipe swipe--website" href="#" target="_blank" rel="noopener" aria-label="My Website">
           <span class="swipe-reveal">
-            <svg class="portfolio-brush" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="swipe-brush" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
               <defs>
-                <linearGradient id="gradPortfolio" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient id="gradWebsite" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stop-color="#8a3a5c"/>
                   <stop offset="55%" stop-color="#7a2b4d"/>
                   <stop offset="100%" stop-color="#5a1732"/>
                 </linearGradient>
-                <filter id="roughPortfolio">
+                <filter id="roughWebsite">
                   <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="31"/>
                   <feDisplacementMap in="SourceGraphic" scale="3.5"/>
                 </filter>
               </defs>
-              <path filter="url(#roughPortfolio)"
+              <path filter="url(#roughWebsite)"
                     d="M22 46 q80 -32 170 -18 q70 12 96 4 q8 26 -10 46 q-58 16 -140 10 q-80 -8 -116 -22 q-4 -14 0 -20 z"
-                    fill="url(#gradPortfolio)"
+                    fill="url(#gradWebsite)"
                     stroke="#d4af37" stroke-width="2.5"/>
               <path d="M32 50 q80 -22 168 -8 q56 8 84 2" stroke="rgba(255,220,150,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
             </svg>
-            <span class="portfolio-label">Portfolio</span>
+            <span class="swipe-label-text">My Website</span>
           </span>
         </a>
 
       </div>
 
-      <!-- Quote, always visible above swipes -->
+      <!-- Start buttons (visible until user picks) -->
+      <div class="start-buttons" id="startButtons">
+        <button class="pw-tool pw-tool--big" id="clickToPaint">
+          <span class="pw-tool-icon">🎨</span>
+          <span class="pw-tool-label">Click to Paint</span>
+        </button>
+        <button class="pw-tool pw-tool--big" id="skipToLinks">
+          <span class="pw-tool-icon">→</span>
+          <span class="pw-tool-label">Skip to Links</span>
+        </button>
+      </div>
+
+      <!-- Brush -->
+      <div class="brush" id="brush" aria-hidden="true">
+        <svg viewBox="0 0 40 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 4 q2 -3 4 0 l3 58 q-5 3 -10 0 z" fill="#7a4a2a" stroke="#4a2a12" stroke-width="0.8"/>
+          <path d="M15 62 h10 v10 h-10 z" fill="#b9b9c9" stroke="#6a6a78" stroke-width="0.6"/>
+          <path d="M14 72 q6 3 12 0 q1 12 -2 22 q-4 8 -8 0 q-3 -10 -2 -22 z" fill="#e7d9c4" stroke="#a08860" stroke-width="0.6"/>
+          <path class="brush-tip" d="M14 72 q6 3 12 0 q1 8 -1 14 q-5 4 -10 0 q-2 -6 -1 -14 z" fill="#e1306c" opacity="0.9"/>
+        </svg>
+      </div>
+
+      <!-- Quote below palette -->
       <div class="quote-layer">
         <svg class="quote-etch" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
@@ -222,20 +267,10 @@
         </svg>
       </div>
 
-      <!-- Brush -->
-      <div class="brush" id="brush" aria-hidden="true">
-        <svg viewBox="0 0 40 120" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 4 q2 -3 4 0 l3 58 q-5 3 -10 0 z" fill="#7a4a2a" stroke="#4a2a12" stroke-width="0.8"/>
-          <path d="M15 62 h10 v10 h-10 z" fill="#b9b9c9" stroke="#6a6a78" stroke-width="0.6"/>
-          <path d="M14 72 q6 3 12 0 q1 12 -2 22 q-4 8 -8 0 q-3 -10 -2 -22 z" fill="#e7d9c4" stroke="#a08860" stroke-width="0.6"/>
-          <path d="M14 72 q6 3 12 0 q1 8 -1 14 q-5 4 -10 0 q-2 -6 -1 -14 z" fill="#e1306c" opacity="0.9"/>
-        </svg>
-      </div>
-
-      <!-- Windows 98 Paint window — overlapping bottom-right of palette -->
+      <!-- Win98 paint window (fully transparent body) -->
       <div class="paint-window" role="region" aria-label="Pixel me">
         <div class="pw-titlebar">
-          <span class="pw-title">pixel me</span>
+          <span class="pw-title">pixel me.jpg</span>
           <div class="pw-buttons" aria-hidden="true">
             <span class="pw-btn">_</span>
             <span class="pw-btn">□</span>
@@ -249,6 +284,17 @@
                  src="images/artsy/frame1.png" alt="" draggable="false" />
             <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite"></div>
           </div>
+        </div>
+
+        <div class="pw-palette-strip" aria-hidden="true">
+          <span style="background:#f7931e"></span>
+          <span style="background:#e1306c"></span>
+          <span style="background:#833ab4"></span>
+          <span style="background:#cc0000"></span>
+          <span style="background:#0a0a0a"></span>
+          <span style="background:#d4af37"></span>
+          <span style="background:#7a2b4d"></span>
+          <span style="background:#b9b9c9"></span>
         </div>
 
         <div class="pw-toolbar">

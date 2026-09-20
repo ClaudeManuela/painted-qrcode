@@ -1,6 +1,6 @@
 /* ============================================================
    PAINTED — animation.js
-   Sprites, uniform brush choreography, Win98 mascot controls
+   Sprites, click-to-paint brush choreography, Win98 mascot
    ============================================================ */
 
 (() => {
@@ -12,11 +12,13 @@
     glasses: { folder: 'glasses', frames: 8 },
     howdy:   { folder: 'howdy',   frames: 7 }
   };
-
   const SET_ORDER = ['artsy', 'photo', 'glasses', 'howdy'];
   const FRAME_MS = 300;
-  const TRAVEL_MS = 300;   // brush travel between swipes
-  const REVEAL_MS = 500;   // reveal duration for each swipe
+
+  // Animation timing
+  const TRAVEL_MS = 200;
+  const REVEAL_MS = 400;
+  const OVERLAP_MS = 80;
 
   const FACTS = [
     "I paint with my heart, not just my hands.",
@@ -41,9 +43,9 @@
 
   const SPRITE_POOLS = {
     butterflies: { glyphs: ['🦋'], size: [16, 24], anim: 'float-across', dur: [16, 26], count: 8 },
-    glitter:     { glyphs: ['✨', '⭐', '💫'], size: [10, 16], anim: 'twinkle', dur: [1.8, 3.2], count: 14 },
-    notes:       { glyphs: ['🎵', '🎶'], size: [12, 18], anim: 'float-up', dur: [11, 17], count: 10 },
-    hearts:      { glyphs: ['💕', '💖', '💗'], size: [12, 20], anim: 'float-up', dur: [10, 16], count: 10 }
+    glitter:     { glyphs: ['✨','⭐','💫'], size: [10, 16], anim: 'twinkle', dur: [1.8, 3.2], count: 14 },
+    notes:       { glyphs: ['🎵','🎶'], size: [12, 18], anim: 'float-up', dur: [11, 17], count: 10 },
+    hearts:      { glyphs: ['💕','💖','💗'], size: [12, 20], anim: 'float-up', dur: [10, 16], count: 10 }
   };
 
   function spawnSprites(key, container) {
@@ -83,77 +85,157 @@
       const isOn = container.classList.toggle('active');
       btn.classList.toggle('toggle--on', isOn);
       btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-      if (isOn && container.children.length === 0) {
-        spawnSprites(key, container);
-      }
+      if (isOn && container.children.length === 0) spawnSprites(key, container);
     });
   });
 
   function rnd(min, max) { return Math.random() * (max - min) + min; }
 
   // ---------- BRUSH CHOREOGRAPHY ----------
-  // Brush tip is at the bottom of its SVG. We position the brush so its TIP
-  // lands on the top-left of the swipe (the point it starts painting from).
   const brush = document.getElementById('brush');
   const paletteWrap = document.querySelector('.palette-wrap');
-  const swipeEls = Array.from(document.querySelectorAll('.swipe, .portfolio-swipe'));
+  const vial = document.getElementById('vial');
+  const swipeEls = Array.from(document.querySelectorAll('.swipe'));
+  const startButtons = document.getElementById('startButtons');
+  const clickBtn = document.getElementById('clickToPaint');
+  const skipBtn  = document.getElementById('skipToLinks');
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function positionBrushTipAt(x, y) {
-    // Brush is 26x78. Tip is at (50%, 100%) of its box. Since transform-origin
-    // is 50% 100%, translate(-50%, -100%) puts the origin (tip) at (x, y).
-    brush.style.transform =
-      `translate(${x}px, ${y}px) translate(-50%, -100%) rotate(22deg)`;
+  // Brush box is 26x78. Tip is at (50%, 100%). transform-origin is 50% 100%.
+  function tipTo(x, y) {
+    return `translate(${x}px, ${y}px) translate(-50%, -100%) rotate(22deg)`;
   }
 
-  function paintSwipe(el) {
-    return new Promise(resolve => {
-      const wrapRect = paletteWrap.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-
-      // Tip target: top-left corner of the swipe
-      const tipX = r.left - wrapRect.left - 4;
-      const tipY = r.top  - wrapRect.top  + 6;
-
-      positionBrushTipAt(tipX, tipY);
-
-      // Wait for travel to complete
-      setTimeout(() => {
-        el.classList.add('painted');
-        // Wait for the reveal to finish
-        setTimeout(resolve, REVEAL_MS);
-      }, TRAVEL_MS);
-    });
+  function getTip(el, offsetX = -6, offsetY = 6) {
+    const wrapRect = paletteWrap.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    return {
+      x: r.left - wrapRect.left + offsetX,
+      y: r.top  - wrapRect.top  + offsetY
+    };
   }
+
+  async function moveTipTo(x, y, duration = TRAVEL_MS, easing = 'ease-out') {
+    const from = brush.getBoundingClientRect();
+    const wrapRect = paletteWrap.getBoundingClientRect();
+    // We can't easily read the transform; use Web Animations API with
+    // current computed transform as start.
+    const current = getComputedStyle(brush).transform;
+    const start = current === 'none'
+      ? tipTo(x, y)
+      : current;
+
+    const anim = brush.animate(
+      [
+        { transform: start },
+        { transform: tipTo(x, y) }
+      ],
+      { duration, easing, fill: 'forwards' }
+    );
+    await anim.finished;
+  }
+
+  async function revealSwipe(el) {
+    const reveal = el.querySelector('.swipe-reveal');
+    const anim = reveal.animate(
+      [
+        { clipPath: 'inset(0 100% 0 0)' },
+        { clipPath: 'inset(0 0 0 0)' }
+      ],
+      { duration: REVEAL_MS, easing: 'ease-out', fill: 'forwards' }
+    );
+    await anim.finished;
+  }
+
+  async function dipInto(el, dipMs = 260) {
+    // Small scale-bounce to simulate dipping
+    const anim = brush.animate(
+      [
+        { transform: getComputedStyle(brush).transform + ' scale(1)' },
+        { transform: getComputedStyle(brush).transform + ' scale(0.86)' },
+        { transform: getComputedStyle(brush).transform + ' scale(1)' }
+      ],
+      { duration: dipMs, easing: 'ease-in-out' }
+    );
+    await anim.finished;
+  }
+
+  let hasPainted = false;
+  let isPainting = false;
 
   async function runBrushSequence() {
+    if (isPainting || hasPainted) return;
+    isPainting = true;
+
+    startButtons.classList.add('hidden');
+
     if (prefersReducedMotion) {
-      swipeEls.forEach(s => s.classList.add('painted'));
+      swipeEls.forEach(el => {
+        el.querySelector('.swipe-reveal').style.clipPath = 'inset(0 0 0 0)';
+      });
+      hasPainted = true;
+      isPainting = false;
       return;
     }
 
     brush.classList.add('visible');
+    await new Promise(r => setTimeout(r, 100));
 
-    // Small entry pause so brush is visible before first move
-    await new Promise(r => setTimeout(r, 200));
+    // Start position: upper-left, near the vial
+    const wrapRect = paletteWrap.getBoundingClientRect();
+    await moveTipTo(wrapRect.width * 0.18, wrapRect.height * 0.18, 260);
 
+    // Dip into vial
+    const vialRect = vial.getBoundingClientRect();
+    const vialTipX = vialRect.left - wrapRect.left + vialRect.width / 2;
+    const vialTipY = vialRect.top  - wrapRect.top  + vialRect.height * 0.75;
+    await moveTipTo(vialTipX, vialTipY, 220);
+    await dipInto(vial);
+
+    // Paint each swipe
     for (const el of swipeEls) {
-      await paintSwipe(el);
+      const { x, y } = getTip(el, -6, 8);
+      await moveTipTo(x, y, TRAVEL_MS);
+
+      // Start reveal, then overlap into the next travel
+      const revealPromise = revealSwipe(el);
+      await new Promise(r => setTimeout(r, Math.max(0, REVEAL_MS - OVERLAP_MS)));
+      await revealPromise;
     }
 
-    // Brush rests at lower-center of palette
-    const wrapRect = paletteWrap.getBoundingClientRect();
-    positionBrushTipAt(wrapRect.width * 0.5, wrapRect.height * 0.82);
-    brush.style.transform += ' rotate(35deg)';
+    // Dip into mini palette strip (bottom of paint window)
+    const strip = document.querySelector('.pw-palette-strip');
+    if (strip) {
+      const sr = strip.getBoundingClientRect();
+      await moveTipTo(sr.left - wrapRect.left + sr.width / 2,
+                      sr.top  - wrapRect.top  + sr.height * 0.6, 240);
+      await dipInto(strip, 220);
+    }
 
-    // Fade out after a beat
-    setTimeout(() => brush.classList.remove('visible'), 800);
+    // Settle into thumb hole (lower-center of palette)
+    await moveTipTo(wrapRect.width * 0.5, wrapRect.height * 0.88, 260, 'ease-in-out');
+
+    hasPainted = true;
+    isPainting = false;
   }
 
-  requestAnimationFrame(() => {
-    setTimeout(runBrushSequence, 200);
-  });
+  function skipToLinks() {
+    if (hasPainted) return;
+    startButtons.classList.add('hidden');
+    swipeEls.forEach(el => {
+      el.querySelector('.swipe-reveal').style.clipPath = 'inset(0 0 0 0)';
+    });
+    hasPainted = true;
+  }
+
+  clickBtn.addEventListener('click', runBrushSequence);
+  skipBtn.addEventListener('click', skipToLinks);
+
+  // Auto-paint after 8 seconds
+  setTimeout(() => {
+    if (!hasPainted) runBrushSequence();
+  }, 8000);
 
   // ---------- MASCOT ----------
   const mascotSprite = document.getElementById('mascotSprite');
@@ -172,21 +254,13 @@
     const info = MASCOT_SETS[currentSet];
     mascotSprite.src = `images/${info.folder}/frame${currentFrame}.png`;
   }
-
   function advanceFrame() {
     const info = MASCOT_SETS[currentSet];
     currentFrame = (currentFrame % info.frames) + 1;
     updateSprite();
   }
-
-  function startTimer() {
-    stopTimer();
-    frameTimer = setInterval(advanceFrame, FRAME_MS);
-  }
-
-  function stopTimer() {
-    if (frameTimer) { clearInterval(frameTimer); frameTimer = null; }
-  }
+  function startTimer() { stopTimer(); frameTimer = setInterval(advanceFrame, FRAME_MS); }
+  function stopTimer()  { if (frameTimer) { clearInterval(frameTimer); frameTimer = null; } }
 
   function setPlaying(playing) {
     isPlaying = playing;
@@ -202,9 +276,7 @@
   }
 
   setPlaying(true);
-
   playPauseBtn.addEventListener('click', () => setPlaying(!isPlaying));
-
   outfitBtn.addEventListener('click', () => {
     const idx = (SET_ORDER.indexOf(currentSet) + 1) % SET_ORDER.length;
     currentSet = SET_ORDER[idx];
@@ -214,11 +286,8 @@
 
   let factIndex = 0;
   mascotEl.addEventListener('click', showFact);
-  mascotEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      showFact();
-    }
+  mascotEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showFact(); }
   });
 
   function showFact() {

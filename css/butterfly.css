@@ -1,6 +1,5 @@
 /* ============================================================
-   PAINTED — Link page styles
-   Win98 paint window, brush choreography, single studio
+   PAINTED — Win98 transparent paint window, brush choreography
    ============================================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,7 +19,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ---------- Studio background (single) ---------- */
+/* ---------- Studio background ---------- */
 .bg-layer {
   position: fixed;
   inset: 0;
@@ -65,25 +64,22 @@ body {
   90%  { opacity: 1; }
   100% { transform: translate(110vw, -20vh) rotate(35deg); opacity: 0; }
 }
-
 @keyframes float-up {
   0%   { transform: translateY(0) scale(1); opacity: 0; }
   20%  { opacity: 1; }
   100% { transform: translateY(-100vh) scale(0.6); opacity: 0; }
 }
-
 @keyframes twinkle {
   0%, 100% { transform: scale(0.6); opacity: 0; }
   50%      { transform: scale(1.1); opacity: 1; }
 }
 
-/* ---------- Topbar: toggles only ---------- */
+/* ---------- Topbar ---------- */
 .topbar {
   width: 100%;
   max-width: 440px;
   display: flex;
   justify-content: center;
-  align-items: center;
   margin-bottom: 10px;
   z-index: 5;
 }
@@ -113,11 +109,10 @@ body {
   justify-content: center;
   opacity: 0.4;
   filter: grayscale(1);
-  transition: opacity 0.25s ease, filter 0.25s ease, transform 0.2s ease, background 0.25s ease;
+  transition: opacity 0.25s, filter 0.25s, transform 0.2s, background 0.25s;
 }
 
 .toggle:active { transform: scale(0.9); }
-
 .toggle--on {
   opacity: 1;
   filter: grayscale(0);
@@ -150,39 +145,34 @@ body {
   filter: drop-shadow(0 18px 32px rgba(60, 20, 40, 0.32));
 }
 
-/* Swipe container */
+/* ---------- Vial ---------- */
+.vial {
+  position: absolute;
+  top: 8%;
+  left: 10%;
+  width: 30px;
+  height: 46px;
+  z-index: 4;
+  transform: rotate(-6deg);
+  filter: drop-shadow(0 3px 6px rgba(60, 20, 40, 0.3));
+  pointer-events: none;
+}
+
+.vial svg { width: 100%; height: 100%; }
+
+/* ---------- Swipes ---------- */
 .palette-content {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 14% 12% 22%;
+  justify-content: flex-start;
+  padding: 22% 12% 6%;
   gap: 12px;
   z-index: 2;
 }
 
-/* Quote layer above swipes */
-.quote-layer {
-  position: absolute;
-  left: 50%;
-  bottom: 12%;
-  transform: translateX(-50%);
-  width: 78%;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.quote-etch {
-  width: 100%;
-  max-width: 240px;
-  height: auto;
-}
-
-/* Groups */
 .group {
   display: flex;
   flex-direction: column;
@@ -197,9 +187,7 @@ body {
   flex-wrap: nowrap;
 }
 
-/* ---------- Swipes ---------- */
-.swipe,
-.portfolio-swipe {
+.swipe {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -210,8 +198,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.swipe:active,
-.portfolio-swipe:active { transform: scale(0.95); }
+.swipe:active { transform: scale(0.95); }
 
 .swipe-reveal {
   position: relative;
@@ -221,21 +208,9 @@ body {
   width: 100%;
   height: 100%;
   clip-path: inset(0 100% 0 0);
-  animation: none;
 }
 
-.swipe.painted .swipe-reveal,
-.portfolio-swipe.painted .swipe-reveal {
-  animation: swipe-reveal 0.5s linear forwards;
-}
-
-@keyframes swipe-reveal {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-
-.swipe-brush,
-.portfolio-brush {
+.swipe-brush {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -260,43 +235,47 @@ body {
 
 .swipe-logo svg { width: 62%; height: 62%; display: block; }
 
-/* Painting Instagram */
-.group--painting .swipe--ig-paint {
-  width: 148px;
-  height: 60px;
-}
-.group--painting .swipe--ig-paint .swipe-logo {
-  width: 38px;
-  height: 38px;
-}
-
-/* Social */
-.group--social .swipe {
-  width: 118px;
-  height: 48px;
-}
-.group--social .swipe .swipe-logo {
-  width: 30px;
-  height: 30px;
-  margin-right: 6px;
-}
-
-/* Portfolio */
-.portfolio-swipe {
-  justify-content: center;
-  width: 190px;
-  height: 66px;
-  color: #f7e6c8;
-}
-
-.portfolio-label {
+.swipe-label-text {
   position: relative;
   z-index: 2;
   font-family: 'Georgia', serif;
-  font-size: 13px;
-  letter-spacing: 0.24em;
+  font-size: 12px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: #f7e6c8;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Sizes */
+.group--painting .swipe--ig-paint { width: 148px; height: 60px; }
+.group--painting .swipe--ig-paint .swipe-logo { width: 38px; height: 38px; }
+
+.group--social .swipe { width: 118px; height: 48px; }
+.group--social .swipe .swipe-logo { width: 30px; height: 30px; margin-right: 6px; }
+
+.swipe--website {
+  justify-content: center;
+  width: 190px;
+  height: 66px;
+}
+
+/* ---------- Start buttons ---------- */
+.start-buttons {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 6;
+  transition: opacity 0.3s ease;
+}
+
+.start-buttons.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ---------- Brush ---------- */
@@ -306,92 +285,127 @@ body {
   top: 0;
   width: 26px;
   height: 78px;
-  transform-origin: 50% 100%; /* tip at bottom */
-  z-index: 5;
+  transform-origin: 50% 100%;
+  z-index: 7;
   pointer-events: none;
   filter: drop-shadow(0 6px 10px rgba(60, 20, 40, 0.35));
   opacity: 0;
-  transition: opacity 0.25s ease, transform 0.3s ease-in-out;
+  transition: opacity 0.2s ease;
 }
 
-.brush.visible { opacity: 0.92; }
+.brush.visible { opacity: 0.95; }
 
 .brush svg { width: 100%; height: 100%; }
 
-/* ---------- Windows 98 Paint window (overlapping bottom-right) ---------- */
+/* ---------- Quote (below palette) ---------- */
+.quote-layer {
+  position: absolute;
+  left: 50%;
+  bottom: -80px;
+  transform: translateX(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.quote-etch {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+}
+
+/* ---------- Windows 98 paint window (FULLY TRANSPARENT BODY) ---------- */
 .paint-window {
   position: absolute;
-  right: -6%;
-  bottom: 4%;
-  width: 138px;
-  background: #d4b0c0;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  width: 66%;
+  max-width: 260px;
+  background: rgba(212, 176, 192, 0.32);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 2px solid;
-  border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
-  box-shadow: 1px 1px 0 #6a4058, -1px -1px 0 #f0d8e2, 0 6px 16px rgba(60, 20, 40, 0.3);
+  border-color: rgba(240, 216, 226, 0.9) rgba(106, 64, 88, 0.9) rgba(106, 64, 88, 0.9) rgba(240, 216, 226, 0.9);
+  box-shadow: 1px 1px 0 rgba(106, 64, 88, 0.6), -1px -1px 0 rgba(240, 216, 226, 0.7), 0 8px 22px rgba(60, 20, 40, 0.35);
   font-family: 'MS Sans Serif', 'Tahoma', 'Verdana', sans-serif;
   font-size: 10px;
   color: #2a0a1a;
   user-select: none;
-  z-index: 6;
+  z-index: 5;
 }
 
 .pw-titlebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px 3px 2px 5px;
-  background: linear-gradient(90deg, #7a2b4d 0%, #a04868 100%);
+  padding: 3px 4px 3px 6px;
+  background: linear-gradient(90deg, rgba(122, 43, 77, 0.92) 0%, rgba(160, 72, 104, 0.92) 100%);
   color: #fff;
   font-weight: bold;
   font-size: 10px;
   letter-spacing: 0.02em;
 }
 
-.pw-title { text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
+.pw-title { text-shadow: 1px 1px 0 rgba(0,0,0,0.35); }
 
 .pw-buttons { display: flex; gap: 2px; }
 
 .pw-btn {
-  width: 13px;
-  height: 11px;
-  background: #d4b0c0;
+  width: 14px;
+  height: 12px;
+  background: rgba(212, 176, 192, 0.85);
   border: 1px solid;
   border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
   color: #2a0a1a;
-  font-size: 8px;
-  line-height: 9px;
+  font-size: 9px;
+  line-height: 10px;
   text-align: center;
   font-weight: bold;
 }
 
-.pw-btn--close { font-size: 9px; }
+.pw-btn--close { font-size: 10px; }
 
 .pw-canvas {
   margin: 3px;
-  padding: 6px;
-  background: #fff8ef;
+  padding: 8px;
+  background: rgba(255, 248, 239, 0.28);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   border: 2px solid;
-  border-color: #6a4058 #f0d8e2 #f0d8e2 #6a4058;
+  border-color: rgba(106, 64, 88, 0.7) rgba(240, 216, 226, 0.7) rgba(240, 216, 226, 0.7) rgba(106, 64, 88, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 90px;
+  min-height: 110px;
   position: relative;
-  overflow: hidden;
-  background-image:
-    linear-gradient(45deg, #f0e4d4 25%, transparent 25%),
-    linear-gradient(-45deg, #f0e4d4 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #f0e4d4 75%),
-    linear-gradient(-45deg, transparent 75%, #f0e4d4 75%);
-  background-size: 10px 10px;
-  background-position: 0 0, 0 5px, 5px -5px, -5px 0;
 }
 
-/* ---------- Mascot ---------- */
+/* Mini palette strip */
+.pw-palette-strip {
+  display: flex;
+  gap: 2px;
+  margin: 0 3px 3px;
+  padding: 4px;
+  background: rgba(212, 176, 192, 0.35);
+  backdrop-filter: blur(3px);
+  border: 1px solid;
+  border-color: rgba(106, 64, 88, 0.5) rgba(240, 216, 226, 0.5) rgba(240, 216, 226, 0.5) rgba(106, 64, 88, 0.5);
+}
+
+.pw-palette-strip span {
+  flex: 1;
+  height: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 1px;
+}
+
+/* Mascot */
 .mascot {
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: 86px;
+  height: 86px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
@@ -452,29 +466,32 @@ body {
   border-top-color: #d4af37;
 }
 
-/* Paint window toolbar */
+/* Toolbar */
 .pw-toolbar {
   display: flex;
   gap: 3px;
   padding: 3px;
-  background: #d4b0c0;
-  border-top: 1px solid #f0d8e2;
+  background: rgba(212, 176, 192, 0.35);
+  backdrop-filter: blur(3px);
+  border-top: 1px solid rgba(240, 216, 226, 0.6);
 }
 
 .pw-tool {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   flex: 1;
-  padding: 3px 4px;
-  background: #d4b0c0;
+  padding: 4px 6px;
+  background: rgba(212, 176, 192, 0.75);
+  backdrop-filter: blur(3px);
   border: 2px solid;
   border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
   color: #2a0a1a;
   font-family: inherit;
   font-size: 10px;
   cursor: pointer;
-  min-height: 22px;
+  min-height: 24px;
 }
 
 .pw-tool:active {
@@ -482,18 +499,34 @@ body {
 }
 
 .pw-tool-icon { font-size: 11px; }
+.pw-tool-label { font-size: 10px; }
 
+.pw-tool--big {
+  min-height: 34px;
+  padding: 6px 14px;
+  font-size: 11px;
+  min-width: 140px;
+}
+
+.pw-tool--big .pw-tool-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Status */
 .pw-status {
   display: flex;
-  border-top: 1px solid #f0d8e2;
-  background: #d4b0c0;
+  border-top: 1px solid rgba(240, 216, 226, 0.6);
+  background: rgba(212, 176, 192, 0.35);
+  backdrop-filter: blur(3px);
 }
 
 .pw-status-cell {
   flex: 1;
   padding: 2px 5px;
   border: 1px solid;
-  border-color: #6a4058 #f0d8e2 #f0d8e2 #6a4058;
+  border-color: rgba(106, 64, 88, 0.5) rgba(240, 216, 226, 0.5) rgba(240, 216, 226, 0.5) rgba(106, 64, 88, 0.5);
   font-size: 9px;
   line-height: 1.2;
 }
@@ -505,11 +538,12 @@ body {
   .group--painting .swipe--ig-paint .swipe-logo { width: 46px; height: 46px; }
   .group--social .swipe { width: 148px; height: 58px; }
   .group--social .swipe .swipe-logo { width: 36px; height: 36px; }
-  .portfolio-swipe { width: 230px; height: 78px; }
-  .portfolio-label { font-size: 15px; }
-  .paint-window { width: 168px; right: -8%; }
-  .mascot { width: 92px; height: 92px; }
-  .quote-etch { max-width: 300px; }
+  .swipe--website { width: 230px; height: 78px; }
+  .swipe-label-text { font-size: 15px; }
+  .paint-window { width: 70%; max-width: 320px; }
+  .mascot { width: 110px; height: 110px; }
+  .quote-etch { max-width: 320px; }
+  .quote-layer { bottom: -100px; }
 }
 
 /* ---------- Reduced motion ---------- */
