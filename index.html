@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#2a1420" />
   <title>Painted — Links</title>
+
+  <!-- Preload the default studio + mascot first frame -->
+  <link rel="preload" as="image" href="images/studios/artstudio.jpg" />
+  <link rel="preload" as="image" href="images/artsy/frame1.png" />
+  <link rel="preload" as="image" href="images/photo/frame1.png" />
+  <link rel="preload" as="image" href="images/glasses/frame1.png" />
+  <link rel="preload" as="image" href="images/howdy/frame1.png" />
+
   <link rel="stylesheet" href="css/butterfly.css" />
 </head>
 <body data-bg="artstudio">
@@ -13,13 +21,13 @@
   <div class="bg-layer" id="bgLayer" aria-hidden="true"></div>
   <div class="bg-tint" id="bgTint" aria-hidden="true"></div>
 
-  <!-- Sprite overlays (floating around the page) -->
+  <!-- Sprite overlays -->
   <div class="sprite-layer" id="spriteButterflies" data-sprite="butterflies" aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteGlitter"     data-sprite="glitter"     aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteNotes"       data-sprite="notes"       aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteHearts"      data-sprite="hearts"      aria-hidden="true"></div>
 
-  <!-- Top control bar: studio chip + sprite toggles -->
+  <!-- Top bar: studio chip + sprite toggles in ONE row -->
   <header class="topbar">
     <button class="chip chip--studio" id="studioChip" aria-label="Change the studio">
       <span class="chip-swatch" id="studioSwatch"></span>
@@ -39,7 +47,7 @@
 
     <div class="palette-wrap">
 
-      <!-- Real SVG palette (kidney shape + thumb hole) -->
+      <!-- Real SVG palette -->
       <svg class="palette" viewBox="0 0 400 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <filter id="woodgrain" x="-5%" y="-5%" width="110%" height="110%">
@@ -57,7 +65,6 @@
           </radialGradient>
         </defs>
 
-        <!-- Kidney/organic palette body -->
         <path class="palette-body"
               filter="url(#woodgrain)"
               fill="url(#paletteShade)"
@@ -69,7 +76,6 @@
                  C55 366 22 288 22 205
                  C22 100 90 20 200 20 Z" />
 
-        <!-- Wood grain subtle stroke -->
         <path class="palette-rim"
               fill="none"
               stroke="rgba(140,95,55,0.28)"
@@ -82,146 +88,15 @@
                  C55 366 22 288 22 205
                  C22 100 90 20 200 20 Z" />
 
-        <!-- Thumb hole -->
         <ellipse class="palette-hole" cx="200" cy="455" rx="42" ry="26"
                  fill="#d9c19a" stroke="rgba(120,80,45,0.35)" stroke-width="2"/>
         <ellipse cx="200" cy="453" rx="36" ry="21" fill="#c8ad84" opacity="0.7"/>
       </svg>
 
-      <!-- Content layered on top of the palette -->
+      <!-- Content overlay -->
       <div class="palette-content">
 
-        <!-- Painting business group (Instagram only) -->
-        <div class="group group--painting">
-          <a class="swipe swipe--ig-paint" href="#" target="_blank" rel="noopener" aria-label="Painting Instagram">
-            <svg class="swipe-brush" viewBox="0 0 240 100" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="gradIgPaint" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#f7931e"/>
-                  <stop offset="45%" stop-color="#e1306c"/>
-                  <stop offset="100%" stop-color="#833ab4"/>
-                </linearGradient>
-                <filter id="roughIgPaint">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"/>
-                  <feDisplacementMap in="SourceGraphic" scale="3"/>
-                </filter>
-              </defs>
-              <path filter="url(#roughIgPaint)"
-                    d="M18 42 q60 -26 130 -14 q56 10 78 2 q6 22 -8 40 q-46 14 -112 8 q-64 -6 -92 -18 q-4 -12 4 -18 z"
-                    fill="url(#gradIgPaint)"/>
-              <path d="M26 46 q66 -18 128 -6 q44 8 68 2" stroke="rgba(255,255,255,0.35)" stroke-width="3" fill="none" stroke-linecap="round"/>
-            </svg>
-            <span class="swipe-logo">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="#fff" stroke-width="2"/>
-                <circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="2"/>
-                <circle cx="17.5" cy="6.5" r="1.3" fill="#fff"/>
-              </svg>
-            </span>
-          </a>
-        </div>
-
-        <!-- Social group (3 swipes) -->
-        <div class="group group--social">
-          <a class="swipe swipe--tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok">
-            <svg class="swipe-brush" viewBox="0 0 180 80" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <filter id="roughTikTok">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="11"/>
-                  <feDisplacementMap in="SourceGraphic" scale="3"/>
-                </filter>
-              </defs>
-              <path filter="url(#roughTikTok)"
-                    d="M14 32 q56 -20 108 -10 q40 8 60 3 q4 18 -6 32 q-40 12 -94 6 q-56 -6 -76 -14 q-2 -10 8 -17 z"
-                    fill="#0a0a0a"/>
-              <path d="M22 36 q56 -14 106 -4 q36 5 54 1" stroke="#25f4ee" stroke-width="2" fill="none" opacity="0.75" stroke-linecap="round"/>
-              <path d="M24 48 q56 10 104 4 q36 -4 52 -2" stroke="#fe2c55" stroke-width="2" fill="none" opacity="0.75" stroke-linecap="round"/>
-            </svg>
-            <span class="swipe-logo">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M16 3v3.2a5 5 0 0 0 4 3.9v3a8 8 0 0 1-4-1.3v5.7a5.8 5.8 0 1 1-5.8-5.8c.3 0 .7 0 1 .1v3.1a2.7 2.7 0 1 0 1.9 2.6V3h3z" fill="#fff"/>
-              </svg>
-            </span>
-          </a>
-
-          <a class="swipe swipe--ig-social" href="#" target="_blank" rel="noopener" aria-label="Personal Instagram">
-            <svg class="swipe-brush" viewBox="0 0 180 80" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="gradIgSocial" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#f7931e"/>
-                  <stop offset="45%" stop-color="#e1306c"/>
-                  <stop offset="100%" stop-color="#833ab4"/>
-                </linearGradient>
-                <filter id="roughIgSocial">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.88" numOctaves="1" seed="17"/>
-                  <feDisplacementMap in="SourceGraphic" scale="3"/>
-                </filter>
-              </defs>
-              <path filter="url(#roughIgSocial)"
-                    d="M14 32 q56 -20 108 -10 q40 8 60 3 q4 18 -6 32 q-40 12 -94 6 q-56 -6 -76 -14 q-2 -10 8 -17 z"
-                    fill="url(#gradIgSocial)"/>
-              <path d="M22 36 q56 -14 106 -4 q36 5 54 1" stroke="rgba(255,255,255,0.3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <span class="swipe-logo">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="#fff" stroke-width="2"/>
-                <circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="2"/>
-                <circle cx="17.5" cy="6.5" r="1.3" fill="#fff"/>
-              </svg>
-            </span>
-          </a>
-
-          <a class="swipe swipe--yt" href="#" target="_blank" rel="noopener" aria-label="YouTube">
-            <svg class="swipe-brush" viewBox="0 0 180 80" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="gradYt" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#ff6b6b"/>
-                  <stop offset="55%" stop-color="#cc0000"/>
-                  <stop offset="100%" stop-color="#990000"/>
-                </linearGradient>
-                <filter id="roughYt">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="23"/>
-                  <feDisplacementMap in="SourceGraphic" scale="3"/>
-                </filter>
-              </defs>
-              <path filter="url(#roughYt)"
-                    d="M14 32 q56 -20 108 -10 q40 8 60 3 q4 18 -6 32 q-40 12 -94 6 q-56 -6 -76 -14 q-2 -10 8 -17 z"
-                    fill="url(#gradYt)"/>
-              <path d="M22 36 q56 -14 106 -4 q36 5 54 1" stroke="rgba(255,255,255,0.32)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <span class="swipe-logo">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="2.5" y="5.5" width="19" height="13" rx="3.5" fill="#fff"/>
-                <path d="M10 9.2l5 2.8-5 2.8V9.2z" fill="#cc0000"/>
-              </svg>
-            </span>
-          </a>
-        </div>
-
-        <!-- Portfolio swipe (own, bigger) -->
-        <a class="portfolio-swipe" href="#" target="_blank" rel="noopener" aria-label="Portfolio">
-          <svg class="portfolio-brush" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="gradPortfolio" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#8a3a5c"/>
-                <stop offset="55%" stop-color="#7a2b4d"/>
-                <stop offset="100%" stop-color="#5a1732"/>
-              </linearGradient>
-              <filter id="roughPortfolio">
-                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="31"/>
-                <feDisplacementMap in="SourceGraphic" scale="3.5"/>
-              </filter>
-            </defs>
-            <path filter="url(#roughPortfolio)"
-                  d="M22 46 q80 -32 170 -18 q70 12 96 4 q8 26 -10 46 q-58 16 -140 10 q-80 -8 -116 -22 q-4 -14 0 -20 z"
-                  fill="url(#gradPortfolio)"
-                  stroke="#d4af37" stroke-width="2.5"/>
-            <path d="M32 50 q80 -22 168 -8 q56 8 84 2" stroke="rgba(255,220,150,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </svg>
-          <span class="portfolio-label">Portfolio</span>
-        </a>
-
-        <!-- Quote, wood-burned -->
+        <!-- Etched quote, visible from the start -->
         <div class="quote-wrap">
           <svg class="quote-etch" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
@@ -232,39 +107,181 @@
             </defs>
             <text filter="url(#burn)" x="160" y="34" text-anchor="middle"
                   font-family="Georgia, serif" font-style="italic" font-size="14"
-                  fill="#6b4223" opacity="0.85">"Art is not what you see,</text>
+                  fill="#3d2410" opacity="0.95">"Art is not what you see,</text>
             <text filter="url(#burn)" x="160" y="56" text-anchor="middle"
                   font-family="Georgia, serif" font-style="italic" font-size="14"
-                  fill="#6b4223" opacity="0.85">but what you make others see."</text>
+                  fill="#3d2410" opacity="0.95">but what you make others see."</text>
             <text filter="url(#burn)" x="160" y="78" text-anchor="middle"
                   font-family="Georgia, serif" font-size="10" letter-spacing="2"
-                  fill="#6b4223" opacity="0.7">— EDGAR DEGAS</text>
+                  fill="#3d2410" opacity="0.8">— EDGAR DEGAS</text>
           </svg>
         </div>
 
-        <!-- Brush -->
-        <div class="brush" id="brush" aria-hidden="true">
-          <svg viewBox="0 0 40 120" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 4 q2 -3 4 0 l3 58 q-5 3 -10 0 z" fill="#7a4a2a" stroke="#4a2a12" stroke-width="0.8"/>
-            <path d="M15 62 h10 v10 h-10 z" fill="#b9b9c9" stroke="#6a6a78" stroke-width="0.6"/>
-            <path d="M14 72 q6 3 12 0 q1 12 -2 22 q-4 8 -8 0 q-3 -10 -2 -22 z" fill="#e7d9c4" stroke="#a08860" stroke-width="0.6"/>
-            <path d="M14 72 q6 3 12 0 q1 8 -1 14 q-5 4 -10 0 q-2 -6 -1 -14 z" fill="#e1306c" opacity="0.9"/>
-          </svg>
+        <!-- Painting group (Instagram business only) -->
+        <div class="group group--painting">
+          <a class="swipe swipe--ig-paint" href="#" target="_blank" rel="noopener" aria-label="Painting Instagram">
+            <span class="swipe-reveal">
+              <svg class="swipe-brush" viewBox="0 0 240 100" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="gradIgPaint" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#f7931e"/>
+                    <stop offset="45%" stop-color="#e1306c"/>
+                    <stop offset="100%" stop-color="#833ab4"/>
+                  </linearGradient>
+                  <filter id="roughIgPaint">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3"/>
+                    <feDisplacementMap in="SourceGraphic" scale="3"/>
+                  </filter>
+                </defs>
+                <path filter="url(#roughIgPaint)"
+                      d="M18 42 q60 -26 130 -14 q56 10 78 2 q6 22 -8 40 q-46 14 -112 8 q-64 -6 -92 -18 q-4 -12 4 -18 z"
+                      fill="url(#gradIgPaint)"/>
+                <path d="M26 46 q66 -18 128 -6 q44 8 68 2" stroke="rgba(255,255,255,0.35)" stroke-width="3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <span class="swipe-logo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="#fff" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="2"/>
+                  <circle cx="17.5" cy="6.5" r="1.3" fill="#fff"/>
+                </svg>
+              </span>
+            </span>
+          </a>
         </div>
+
+        <!-- Social group (TikTok + YouTube) -->
+        <div class="group group--social">
+          <a class="swipe swipe--tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+            <span class="swipe-reveal">
+              <svg class="swipe-brush" viewBox="0 0 180 80" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <filter id="roughTikTok">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="11"/>
+                    <feDisplacementMap in="SourceGraphic" scale="3"/>
+                  </filter>
+                </defs>
+                <path filter="url(#roughTikTok)"
+                      d="M14 32 q56 -20 108 -10 q40 8 60 3 q4 18 -6 32 q-40 12 -94 6 q-56 -6 -76 -14 q-2 -10 8 -17 z"
+                      fill="#0a0a0a"/>
+                <path d="M22 36 q56 -14 106 -4 q36 5 54 1" stroke="#25f4ee" stroke-width="2" fill="none" opacity="0.75" stroke-linecap="round"/>
+                <path d="M24 48 q56 10 104 4 q36 -4 52 -2" stroke="#fe2c55" stroke-width="2" fill="none" opacity="0.75" stroke-linecap="round"/>
+              </svg>
+              <span class="swipe-logo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M16 3v3.2a5 5 0 0 0 4 3.9v3a8 8 0 0 1-4-1.3v5.7a5.8 5.8 0 1 1-5.8-5.8c.3 0 .7 0 1 .1v3.1a2.7 2.7 0 1 0 1.9 2.6V3h3z" fill="#fff"/>
+                </svg>
+              </span>
+            </span>
+          </a>
+
+          <a class="swipe swipe--yt" href="#" target="_blank" rel="noopener" aria-label="YouTube">
+            <span class="swipe-reveal">
+              <svg class="swipe-brush" viewBox="0 0 180 80" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="gradYt" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ff6b6b"/>
+                    <stop offset="55%" stop-color="#cc0000"/>
+                    <stop offset="100%" stop-color="#990000"/>
+                  </linearGradient>
+                  <filter id="roughYt">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="23"/>
+                    <feDisplacementMap in="SourceGraphic" scale="3"/>
+                  </filter>
+                </defs>
+                <path filter="url(#roughYt)"
+                      d="M14 32 q56 -20 108 -10 q40 8 60 3 q4 18 -6 32 q-40 12 -94 6 q-56 -6 -76 -14 q-2 -10 8 -17 z"
+                      fill="url(#gradYt)"/>
+                <path d="M22 36 q56 -14 106 -4 q36 5 54 1" stroke="rgba(255,255,255,0.32)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              </svg>
+              <span class="swipe-logo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="2.5" y="5.5" width="19" height="13" rx="3.5" fill="#fff"/>
+                  <path d="M10 9.2l5 2.8-5 2.8V9.2z" fill="#cc0000"/>
+                </svg>
+              </span>
+            </span>
+          </a>
+        </div>
+
+        <!-- Portfolio swipe -->
+        <a class="portfolio-swipe" href="#" target="_blank" rel="noopener" aria-label="Portfolio">
+          <span class="swipe-reveal">
+            <svg class="portfolio-brush" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="gradPortfolio" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#8a3a5c"/>
+                  <stop offset="55%" stop-color="#7a2b4d"/>
+                  <stop offset="100%" stop-color="#5a1732"/>
+                </linearGradient>
+                <filter id="roughPortfolio">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="31"/>
+                  <feDisplacementMap in="SourceGraphic" scale="3.5"/>
+                </filter>
+              </defs>
+              <path filter="url(#roughPortfolio)"
+                    d="M22 46 q80 -32 170 -18 q70 12 96 4 q8 26 -10 46 q-58 16 -140 10 q-80 -8 -116 -22 q-4 -14 0 -20 z"
+                    fill="url(#gradPortfolio)"
+                    stroke="#d4af37" stroke-width="2.5"/>
+              <path d="M32 50 q80 -22 168 -8 q56 8 84 2" stroke="rgba(255,220,150,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+            <span class="portfolio-label">Portfolio</span>
+          </span>
+        </a>
 
       </div>
 
-      <!-- Avatar + next outfit label (bottom right of palette) -->
-      <div class="avatar-slot">
-        <div class="mascot" id="mascot" role="button" tabindex="0" aria-label="Say hi">
+      <!-- Animated paintbrush (moves via JS) -->
+      <div class="brush" id="brush" aria-hidden="true">
+        <svg viewBox="0 0 40 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 4 q2 -3 4 0 l3 58 q-5 3 -10 0 z" fill="#7a4a2a" stroke="#4a2a12" stroke-width="0.8"/>
+          <path d="M15 62 h10 v10 h-10 z" fill="#b9b9c9" stroke="#6a6a78" stroke-width="0.6"/>
+          <path d="M14 72 q6 3 12 0 q1 12 -2 22 q-4 8 -8 0 q-3 -10 -2 -22 z" fill="#e7d9c4" stroke="#a08860" stroke-width="0.6"/>
+          <path d="M14 72 q6 3 12 0 q1 8 -1 14 q-5 4 -10 0 q-2 -6 -1 -14 z" fill="#e1306c" opacity="0.9"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Windows 98 Paint window with avatar -->
+    <div class="paint-window" role="region" aria-label="Pixel me">
+      <div class="pw-titlebar">
+        <span class="pw-title">pixel me — untitled.png</span>
+        <div class="pw-buttons" aria-hidden="true">
+          <span class="pw-btn">_</span>
+          <span class="pw-btn">□</span>
+          <span class="pw-btn pw-btn--close">×</span>
+        </div>
+      </div>
+
+      <div class="pw-menubar" aria-hidden="true">
+        <span>File</span><span>Edit</span><span>View</span><span>Image</span><span>Options</span><span>Help</span>
+      </div>
+
+      <div class="pw-canvas">
+        <div class="mascot" id="mascot" role="button" tabindex="0" aria-label="Tap to hear a fact">
           <img class="mascot-sprite" id="mascotSprite"
                src="images/artsy/frame1.png" alt="" draggable="false" />
           <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite"></div>
         </div>
-        <button class="outfit-btn" id="outfitBtn" aria-label="Next outfit">next outfit</button>
       </div>
 
+      <div class="pw-toolbar">
+        <button class="pw-tool" id="playPauseBtn" aria-label="Play or pause animation">
+          <span class="pw-tool-icon" id="playIcon">⏸</span>
+          <span class="pw-tool-label" id="playLabel">pause</span>
+        </button>
+        <button class="pw-tool" id="outfitBtn" aria-label="Next outfit">
+          <span class="pw-tool-icon">👗</span>
+          <span class="pw-tool-label">next outfit</span>
+        </button>
+      </div>
+
+      <div class="pw-status" aria-hidden="true">
+        <span class="pw-status-cell">For Help, click Help Topics on the Help Menu.</span>
+        <span class="pw-status-cell">100%</span>
+      </div>
     </div>
+
   </main>
 
   <script src="js/animation.js"></script>

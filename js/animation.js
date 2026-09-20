@@ -1,13 +1,13 @@
 /* ============================================================
    PAINTED — animation.js
-   Studios, sprite toggles, floating particles, mascot, facts
+   Studios, sprites, brush choreography, Win98 mascot controls
    ============================================================ */
 
 (() => {
   'use strict';
 
   // ---------- CONFIG ----------
-  const STUDIOS = ['artstudio', 'fashionstudio', 'cozycafe', 'monetgarden'];
+  const STUDIOS = ['artstudio', 'monetgarden'];
 
   const MASCOT_SETS = {
     artsy:   { folder: 'artsy',   frames: 8 },
@@ -17,8 +17,8 @@
   };
 
   const SET_ORDER = ['artsy', 'photo', 'glasses', 'howdy'];
+  const FRAME_MS = 300;
 
-  // EDIT THESE 10 FACTS TO YOUR OWN
   const FACTS = [
     "I paint with my heart, not just my hands.",
     "My favourite colour is burgundy.",
@@ -40,13 +40,10 @@
   studioChip.addEventListener('click', () => {
     studioIndex = (studioIndex + 1) % STUDIOS.length;
     document.body.dataset.bg = STUDIOS[studioIndex];
-
-    // rotate swatch
     studioChip.classList.toggle('rotated');
     setTimeout(() => studioChip.classList.remove('rotated'), 800);
   });
 
-  // Fade the label after 5 seconds (option C)
   setTimeout(() => studioLabel.classList.add('hidden'), 5000);
 
   // ---------- SPRITE TOGGLES ----------
@@ -57,45 +54,44 @@
     hearts:      document.getElementById('spriteHearts')
   };
 
-  // butterflies ON by default
-  spriteContainers.butterflies.classList.add('active');
-
-  document.querySelectorAll('.toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key = btn.dataset.toggle;
-      const container = spriteContainers[key];
-      const isOn = container.classList.toggle('active');
-      btn.classList.toggle('toggle--on', isOn);
-      btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-      if (isOn && container.children.length === 0) {
-        spawnSprites(key, container);
-      }
-    });
-  });
-
-  // ---------- SPRITE SPAWNING ----------
-  const SPRITE_GLYPHS = {
-    butterflies: '🦋',
-    glitter:     '✨',
-    notes:       '🎵',
-    hearts:      '💕'
-  };
-
-  const SPRITE_STYLES = {
-    butterflies: { size: [26, 40], anim: 'float-across',   dur: [14, 22], glyph: '🦋' },
-    glitter:     { size: [14, 22], anim: 'twinkle',        dur: [1.5, 3], glyph: '✨' },
-    notes:       { size: [18, 28], anim: 'float-up',       dur: [10, 16], glyph: '🎵' },
-    hearts:      { size: [18, 30], anim: 'float-up',       dur: [9, 15],  glyph: '💕' }
+  // Multi-glyph pools so sprites feel varied
+  const SPRITE_POOLS = {
+    butterflies: {
+      glyphs: ['🦋', '🦋', '🦋', '🦋'],   // you'll swap these with PNGs later
+      size: [16, 24],
+      anim: 'float-across',
+      dur: [16, 26],
+      count: 8
+    },
+    glitter: {
+      glyphs: ['✨', '⭐', '💫'],
+      size: [10, 16],
+      anim: 'twinkle',
+      dur: [1.8, 3.2],
+      count: 14
+    },
+    notes: {
+      glyphs: ['🎵', '🎶'],
+      size: [12, 18],
+      anim: 'float-up',
+      dur: [11, 17],
+      count: 10
+    },
+    hearts: {
+      glyphs: ['💕', '💖', '💗'],
+      size: [12, 20],
+      anim: 'float-up',
+      dur: [10, 16],
+      count: 10
+    }
   };
 
   function spawnSprites(key, container) {
-    const cfg = SPRITE_STYLES[key];
-    const count = key === 'butterflies' ? 6 : 12;
-
-    for (let i = 0; i < count; i++) {
+    const cfg = SPRITE_POOLS[key];
+    for (let i = 0; i < cfg.count; i++) {
       const el = document.createElement('div');
       el.className = 'sprite';
-      el.textContent = cfg.glyph;
+      el.textContent = cfg.glyphs[Math.floor(Math.random() * cfg.glyphs.length)];
 
       const size = rnd(cfg.size[0], cfg.size[1]);
       const dur  = rnd(cfg.dur[0],  cfg.dur[1]);
@@ -119,59 +115,160 @@
     }
   }
 
-  // Pre-spawn the default butterflies
+  spriteContainers.butterflies.classList.add('active');
   spawnSprites('butterflies', spriteContainers.butterflies);
+
+  document.querySelectorAll('.toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.toggle;
+      const container = spriteContainers[key];
+      const isOn = container.classList.toggle('active');
+      btn.classList.toggle('toggle--on', isOn);
+      btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+      if (isOn && container.children.length === 0) {
+        spawnSprites(key, container);
+      }
+    });
+  });
 
   function rnd(min, max) { return Math.random() * (max - min) + min; }
 
-  // ---------- MASCOT POSE CYCLING ----------
+  // ---------- BRUSH CHOREOGRAPHY ----------
+  const brush = document.getElementById('brush');
+  const paletteWrap = document.querySelector('.palette-wrap');
+  const swipes = Array.from(document.querySelectorAll('.swipe, .portfolio-swipe'));
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function positionBrushAt(el, offsetX = -20) {
+    if (!el || !paletteWrap) return;
+    const wrapRect = paletteWrap.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    const cx = r.left - wrapRect.left + offsetX;
+    const cy = r.top - wrapRect.top + r.height / 2;
+    brush.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%) rotate(22deg)`;
+  }
+
+  function paintSwipe(el) {
+    return new Promise(resolve => {
+      // Move brush to left edge of the swipe
+      positionBrushAt(el, -10);
+      // After brush arrives, reveal the swipe
+      setTimeout(() => {
+        el.classList.add('painted');
+        // Move brush along as the reveal happens (roughly 0.5s)
+        setTimeout(resolve, 380);
+      }, 220);
+    });
+  }
+
+  async function runBrushSequence() {
+    if (prefersReducedMotion) {
+      swipes.forEach(s => s.classList.add('painted'));
+      return;
+    }
+
+    brush.classList.add('visible');
+
+    for (const swipe of swipes) {
+      await paintSwipe(swipe);
+    }
+
+    // Brush settles at rest position (lower-center of palette)
+    const wrapRect = paletteWrap.getBoundingClientRect();
+    const restX = wrapRect.width * 0.5;
+    const restY = wrapRect.height * 0.78;
+    brush.style.transform = `translate(${restX}px, ${restY}px) translate(-50%, -50%) rotate(22deg)`;
+
+    // Hide brush after a beat
+    setTimeout(() => brush.classList.remove('visible'), 900);
+  }
+
+  // Give the browser a frame to lay out before measuring
+  requestAnimationFrame(() => {
+    setTimeout(runBrushSequence, 300);
+  });
+
+  // Re-measure on resize (in case swipes move)
+  window.addEventListener('resize', () => {
+    if (brush.classList.contains('visible')) {
+      // Nothing special — just avoid stale positions
+    }
+  });
+
+  // ---------- MASCOT: AUTO-PLAY, PAUSE, SET CYCLING, FACTS ----------
   const mascotSprite = document.getElementById('mascotSprite');
   const mascotEl     = document.getElementById('mascot');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playIcon     = document.getElementById('playIcon');
+  const playLabel    = document.getElementById('playLabel');
   const outfitBtn    = document.getElementById('outfitBtn');
   const speechBubble = document.getElementById('speechBubble');
 
   let currentSet = 'artsy';
   let currentFrame = 1;
+  let isPlaying = true;
+  let frameTimer = null;
 
   function updateSprite() {
     const info = MASCOT_SETS[currentSet];
     mascotSprite.src = `images/${info.folder}/frame${currentFrame}.png`;
   }
 
-  // Click mascot → next pose within the current set
-  mascotEl.addEventListener('click', () => {
+  function advanceFrame() {
     const info = MASCOT_SETS[currentSet];
     currentFrame = (currentFrame % info.frames) + 1;
     updateSprite();
-  });
+  }
 
-  mascotEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      mascotEl.click();
+  function startTimer() {
+    stopTimer();
+    frameTimer = setInterval(advanceFrame, FRAME_MS);
+  }
+
+  function stopTimer() {
+    if (frameTimer) {
+      clearInterval(frameTimer);
+      frameTimer = null;
     }
+  }
+
+  function setPlaying(playing) {
+    isPlaying = playing;
+    if (playing) {
+      startTimer();
+      playIcon.textContent = '⏸';
+      playLabel.textContent = 'pause';
+      playPauseBtn.setAttribute('aria-label', 'Pause animation');
+    } else {
+      stopTimer();
+      playIcon.textContent = '▶';
+      playLabel.textContent = 'play';
+      playPauseBtn.setAttribute('aria-label', 'Play animation');
+    }
+  }
+
+  // Start autoplay on load
+  setPlaying(true);
+
+  playPauseBtn.addEventListener('click', () => {
+    setPlaying(!isPlaying);
   });
 
-  // Click "next outfit" → switch to next pose set
-  outfitBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
+  // Next outfit cycles sets and restarts at frame 1
+  outfitBtn.addEventListener('click', () => {
     const idx = (SET_ORDER.indexOf(currentSet) + 1) % SET_ORDER.length;
     currentSet = SET_ORDER[idx];
     currentFrame = 1;
     updateSprite();
   });
 
-  // ---------- FACT CYCLING (long-press mascot or right-click for now) ----------
-  // We'll use a small fact-cycle on a second interaction pattern:
-  // tap mascot 2x quickly OR use the speech bubble. To keep UX simple,
-  // the outfit button cycles sets, the mascot cycles frames,
-  // and a fact appears every 5 frame-clicks.
+  // Tap mascot → show a fact
   let factIndex = 0;
-  let frameClickCount = 0;
-
-  mascotEl.addEventListener('click', () => {
-    frameClickCount++;
-    if (frameClickCount % 5 === 0) {
+  mascotEl.addEventListener('click', showFact);
+  mascotEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
       showFact();
     }
   });
@@ -181,12 +278,7 @@
     speechBubble.classList.add('show');
     factIndex = (factIndex + 1) % FACTS.length;
     clearTimeout(showFact._t);
-    showFact._t = setTimeout(() => {
-      speechBubble.classList.remove('show');
-    }, 3500);
+    showFact._t = setTimeout(() => speechBubble.classList.remove('show'), 3500);
   }
-
-  // Expose for manual testing from console: showFact()
-  window.showFact = showFact;
 
 })();
