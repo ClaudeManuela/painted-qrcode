@@ -318,11 +318,11 @@ body {
 /* ---------- Windows 98 paint window (FULLY TRANSPARENT BODY) ---------- */
 .paint-window {
   position: absolute;
-  left: 50%;
+  left: 85%;
   bottom: 6%;
   transform: translateX(-50%);
   width: 66%;
-  max-width: 260px;
+  max-width: 125px;
   background: rgba(212, 176, 192, 0.32);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
