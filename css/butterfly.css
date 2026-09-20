@@ -1,6 +1,6 @@
 /* ============================================================
    PAINTED — Link page styles
-   Win98 paint window, brushstroke swipes, brush choreography
+   Win98 paint window, brush choreography, single studio
    ============================================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,34 +16,28 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 14px 24px;
+  padding: 12px 12px 18px;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ---------- Studio background ---------- */
+/* ---------- Studio background (single) ---------- */
 .bg-layer {
   position: fixed;
   inset: 0;
   z-index: -3;
+  background-image: url("../images/studios/artstudio.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: opacity 0.7s ease;
 }
-
-body[data-bg="artstudio"]   .bg-layer { background-image: url("../images/studios/artstudio.jpg"); }
-body[data-bg="monetgarden"] .bg-layer { background-image: url("../images/studios/monetgarden.jpg"); }
 
 .bg-tint {
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  transition: background 0.7s ease;
+  background: rgba(255, 130, 170, 0.22);
 }
-
-body[data-bg="artstudio"]   .bg-tint { background: rgba(255, 130, 170, 0.22); }
-body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
 
 /* ---------- Sprite layers ---------- */
 .sprite-layer {
@@ -83,60 +77,16 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   50%      { transform: scale(1.1); opacity: 1; }
 }
 
-/* ---------- Top bar (single row) ---------- */
+/* ---------- Topbar: toggles only ---------- */
 .topbar {
   width: 100%;
   max-width: 440px;
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
+  align-items: center;
   margin-bottom: 10px;
   z-index: 5;
-  flex-wrap: wrap;
 }
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  border-radius: 999px;
-  padding: 8px 14px 8px 8px;
-  font-family: inherit;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: #5a1732;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(80, 20, 60, 0.15);
-  transition: transform 0.2s ease, opacity 0.7s ease;
-}
-
-.chip:active { transform: scale(0.95); }
-
-.chip-swatch {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    #f7a8c8 0deg 90deg,
-    #d4af37 90deg 180deg,
-    #7a2b4d 180deg 270deg,
-    #b9b9c9 270deg 360deg
-  );
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.chip.rotated .chip-swatch { transform: rotate(360deg); }
-
-.chip-label { transition: opacity 0.6s ease; }
-.chip-label.hidden { opacity: 0; }
 
 .toggles {
   display: flex;
@@ -151,8 +101,8 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
 }
 
 .toggle {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -175,7 +125,7 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   box-shadow: 0 0 0 1.5px rgba(255, 130, 170, 0.6);
 }
 
-/* ---------- Stage ---------- */
+/* ---------- Stage / Palette ---------- */
 .stage {
   position: relative;
   width: 100%;
@@ -185,7 +135,6 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   align-items: center;
 }
 
-/* ---------- Palette ---------- */
 .palette-wrap {
   position: relative;
   width: 100%;
@@ -201,6 +150,7 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   filter: drop-shadow(0 18px 32px rgba(60, 20, 40, 0.32));
 }
 
+/* Swipe container */
 .palette-content {
   position: absolute;
   inset: 0;
@@ -208,16 +158,22 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16% 12% 22%;
-  gap: 14px;
+  padding: 14% 12% 22%;
+  gap: 12px;
   z-index: 2;
 }
 
-/* Quote */
-.quote-wrap {
-  width: 100%;
+/* Quote layer above swipes */
+.quote-layer {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translateX(-50%);
+  width: 78%;
+  z-index: 3;
   display: flex;
   justify-content: center;
+  pointer-events: none;
 }
 
 .quote-etch {
@@ -226,13 +182,12 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   height: auto;
 }
 
-/* Group spacing */
+/* Groups */
 .group {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: 6px;
 }
 
 .group--social {
@@ -240,7 +195,6 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   justify-content: center;
   gap: 10px;
   flex-wrap: nowrap;
-  margin-top: 4px;
 }
 
 /* ---------- Swipes ---------- */
@@ -252,14 +206,13 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   justify-content: flex-end;
   text-decoration: none;
   color: #fff;
-  transition: transform 0.25s ease;
+  transition: transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .swipe:active,
 .portfolio-swipe:active { transform: scale(0.95); }
 
-/* Reveal wrapper (clip animation target) */
 .swipe-reveal {
   position: relative;
   display: flex;
@@ -268,12 +221,12 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   width: 100%;
   height: 100%;
   clip-path: inset(0 100% 0 0);
-  transition: clip-path 0s;
+  animation: none;
 }
 
 .swipe.painted .swipe-reveal,
 .portfolio-swipe.painted .swipe-reveal {
-  animation: swipe-reveal 0.5s ease-out forwards;
+  animation: swipe-reveal 0.5s linear forwards;
 }
 
 @keyframes swipe-reveal {
@@ -317,7 +270,7 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   height: 38px;
 }
 
-/* Social swipes */
+/* Social */
 .group--social .swipe {
   width: 118px;
   height: 48px;
@@ -333,7 +286,6 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   justify-content: center;
   width: 190px;
   height: 66px;
-  margin-top: 8px;
   color: #f7e6c8;
 }
 
@@ -352,44 +304,46 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   position: absolute;
   left: 0;
   top: 0;
-  width: 28px;
-  height: 84px;
-  transform: translate(-50%, -50%) rotate(22deg);
+  width: 26px;
+  height: 78px;
+  transform-origin: 50% 100%; /* tip at bottom */
   z-index: 5;
   pointer-events: none;
   filter: drop-shadow(0 6px 10px rgba(60, 20, 40, 0.35));
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.25s ease, transform 0.3s ease-in-out;
 }
 
 .brush.visible { opacity: 0.92; }
 
 .brush svg { width: 100%; height: 100%; }
 
-/* ---------- Windows 98 Paint window ---------- */
+/* ---------- Windows 98 Paint window (overlapping bottom-right) ---------- */
 .paint-window {
-  width: 100%;
-  max-width: 440px;
-  margin-top: 14px;
-  background: #d4b0c0; /* pink-tinted Win98 body */
+  position: absolute;
+  right: -6%;
+  bottom: 4%;
+  width: 138px;
+  background: #d4b0c0;
   border: 2px solid;
   border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
-  box-shadow: 1px 1px 0 #6a4058, -1px -1px 0 #f0d8e2, 0 6px 18px rgba(60, 20, 40, 0.28);
+  box-shadow: 1px 1px 0 #6a4058, -1px -1px 0 #f0d8e2, 0 6px 16px rgba(60, 20, 40, 0.3);
   font-family: 'MS Sans Serif', 'Tahoma', 'Verdana', sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   color: #2a0a1a;
   user-select: none;
+  z-index: 6;
 }
 
 .pw-titlebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 3px 4px 3px 6px;
+  padding: 2px 3px 2px 5px;
   background: linear-gradient(90deg, #7a2b4d 0%, #a04868 100%);
   color: #fff;
   font-weight: bold;
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.02em;
 }
 
@@ -398,41 +352,30 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
 .pw-buttons { display: flex; gap: 2px; }
 
 .pw-btn {
-  width: 16px;
-  height: 14px;
+  width: 13px;
+  height: 11px;
   background: #d4b0c0;
   border: 1px solid;
   border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
   color: #2a0a1a;
-  font-size: 10px;
-  line-height: 12px;
+  font-size: 8px;
+  line-height: 9px;
   text-align: center;
   font-weight: bold;
 }
 
-.pw-btn--close { font-size: 11px; }
-
-.pw-menubar {
-  display: flex;
-  gap: 10px;
-  padding: 2px 6px;
-  background: #d4b0c0;
-  border-bottom: 1px solid #6a4058;
-  font-size: 11px;
-}
-
-.pw-menubar span { cursor: default; }
+.pw-btn--close { font-size: 9px; }
 
 .pw-canvas {
-  margin: 4px;
-  padding: 10px;
+  margin: 3px;
+  padding: 6px;
   background: #fff8ef;
   border: 2px solid;
   border-color: #6a4058 #f0d8e2 #f0d8e2 #6a4058;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 130px;
+  min-height: 90px;
   position: relative;
   overflow: hidden;
   background-image:
@@ -440,15 +383,15 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
     linear-gradient(-45deg, #f0e4d4 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #f0e4d4 75%),
     linear-gradient(-45deg, transparent 75%, #f0e4d4 75%);
-  background-size: 12px 12px;
-  background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+  background-size: 10px 10px;
+  background-position: 0 0, 0 5px, 5px -5px, -5px 0;
 }
 
 /* ---------- Mascot ---------- */
 .mascot {
   position: relative;
-  width: 110px;
-  height: 110px;
+  width: 72px;
+  height: 72px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
@@ -471,7 +414,6 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   filter: drop-shadow(0 3px 6px rgba(60, 20, 40, 0.35));
 }
 
-/* Speech bubble */
 .speech-bubble {
   position: absolute;
   bottom: calc(100% + 6px);
@@ -479,11 +421,11 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   transform: translateX(-50%) translateY(6px);
   min-width: 130px;
   max-width: 180px;
-  padding: 6px 10px;
+  padding: 6px 9px;
   background: #fff8ef;
   color: #5a1732;
   font-family: 'Georgia', serif;
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.35;
   text-align: center;
   border-radius: 8px;
@@ -492,7 +434,7 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
-  z-index: 10;
+  z-index: 12;
 }
 
 .speech-bubble.show {
@@ -510,11 +452,11 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   border-top-color: #d4af37;
 }
 
-/* ---------- Paint window toolbar ---------- */
+/* Paint window toolbar */
 .pw-toolbar {
   display: flex;
-  gap: 4px;
-  padding: 4px;
+  gap: 3px;
+  padding: 3px;
   background: #d4b0c0;
   border-top: 1px solid #f0d8e2;
 }
@@ -522,25 +464,24 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
 .pw-tool {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
+  justify-content: center;
+  flex: 1;
+  padding: 3px 4px;
   background: #d4b0c0;
   border: 2px solid;
   border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
   color: #2a0a1a;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 10px;
   cursor: pointer;
-  min-height: 26px;
+  min-height: 22px;
 }
 
-.pw-tool:active,
-.pw-tool.active {
+.pw-tool:active {
   border-color: #6a4058 #f0d8e2 #f0d8e2 #6a4058;
 }
 
-.pw-tool-icon { font-size: 12px; }
-.pw-tool-label { font-size: 11px; }
+.pw-tool-icon { font-size: 11px; }
 
 .pw-status {
   display: flex;
@@ -550,10 +491,11 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
 
 .pw-status-cell {
   flex: 1;
-  padding: 2px 6px;
+  padding: 2px 5px;
   border: 1px solid;
   border-color: #6a4058 #f0d8e2 #f0d8e2 #6a4058;
-  font-size: 10px;
+  font-size: 9px;
+  line-height: 1.2;
 }
 
 /* ---------- Larger screens ---------- */
@@ -565,8 +507,9 @@ body[data-bg="monetgarden"] .bg-tint { background: rgba(90, 140, 210, 0.22); }
   .group--social .swipe .swipe-logo { width: 36px; height: 36px; }
   .portfolio-swipe { width: 230px; height: 78px; }
   .portfolio-label { font-size: 15px; }
-  .mascot { width: 140px; height: 140px; }
-  .paint-window { max-width: 520px; }
+  .paint-window { width: 168px; right: -8%; }
+  .mascot { width: 92px; height: 92px; }
+  .quote-etch { max-width: 300px; }
 }
 
 /* ---------- Reduced motion ---------- */

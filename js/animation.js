@@ -1,13 +1,10 @@
 /* ============================================================
    PAINTED — animation.js
-   Studios, sprites, brush choreography, Win98 mascot controls
+   Sprites, uniform brush choreography, Win98 mascot controls
    ============================================================ */
 
 (() => {
   'use strict';
-
-  // ---------- CONFIG ----------
-  const STUDIOS = ['artstudio', 'monetgarden'];
 
   const MASCOT_SETS = {
     artsy:   { folder: 'artsy',   frames: 8 },
@@ -18,6 +15,8 @@
 
   const SET_ORDER = ['artsy', 'photo', 'glasses', 'howdy'];
   const FRAME_MS = 300;
+  const TRAVEL_MS = 300;   // brush travel between swipes
+  const REVEAL_MS = 500;   // reveal duration for each swipe
 
   const FACTS = [
     "I paint with my heart, not just my hands.",
@@ -32,21 +31,7 @@
     "Follow for more ✨"
   ];
 
-  // ---------- STUDIO CYCLING ----------
-  const studioChip  = document.getElementById('studioChip');
-  const studioLabel = document.getElementById('studioLabel');
-  let studioIndex = 0;
-
-  studioChip.addEventListener('click', () => {
-    studioIndex = (studioIndex + 1) % STUDIOS.length;
-    document.body.dataset.bg = STUDIOS[studioIndex];
-    studioChip.classList.toggle('rotated');
-    setTimeout(() => studioChip.classList.remove('rotated'), 800);
-  });
-
-  setTimeout(() => studioLabel.classList.add('hidden'), 5000);
-
-  // ---------- SPRITE TOGGLES ----------
+  // ---------- SPRITES ----------
   const spriteContainers = {
     butterflies: document.getElementById('spriteButterflies'),
     glitter:     document.getElementById('spriteGlitter'),
@@ -54,36 +39,11 @@
     hearts:      document.getElementById('spriteHearts')
   };
 
-  // Multi-glyph pools so sprites feel varied
   const SPRITE_POOLS = {
-    butterflies: {
-      glyphs: ['🦋', '🦋', '🦋', '🦋'],   // you'll swap these with PNGs later
-      size: [16, 24],
-      anim: 'float-across',
-      dur: [16, 26],
-      count: 8
-    },
-    glitter: {
-      glyphs: ['✨', '⭐', '💫'],
-      size: [10, 16],
-      anim: 'twinkle',
-      dur: [1.8, 3.2],
-      count: 14
-    },
-    notes: {
-      glyphs: ['🎵', '🎶'],
-      size: [12, 18],
-      anim: 'float-up',
-      dur: [11, 17],
-      count: 10
-    },
-    hearts: {
-      glyphs: ['💕', '💖', '💗'],
-      size: [12, 20],
-      anim: 'float-up',
-      dur: [10, 16],
-      count: 10
-    }
+    butterflies: { glyphs: ['🦋'], size: [16, 24], anim: 'float-across', dur: [16, 26], count: 8 },
+    glitter:     { glyphs: ['✨', '⭐', '💫'], size: [10, 16], anim: 'twinkle', dur: [1.8, 3.2], count: 14 },
+    notes:       { glyphs: ['🎵', '🎶'], size: [12, 18], anim: 'float-up', dur: [11, 17], count: 10 },
+    hearts:      { glyphs: ['💕', '💖', '💗'], size: [12, 20], anim: 'float-up', dur: [10, 16], count: 10 }
   };
 
   function spawnSprites(key, container) {
@@ -93,15 +53,13 @@
       el.className = 'sprite';
       el.textContent = cfg.glyphs[Math.floor(Math.random() * cfg.glyphs.length)];
 
-      const size = rnd(cfg.size[0], cfg.size[1]);
-      const dur  = rnd(cfg.dur[0],  cfg.dur[1]);
+      const size  = rnd(cfg.size[0], cfg.size[1]);
+      const dur   = rnd(cfg.dur[0],  cfg.dur[1]);
       const delay = Math.random() * dur;
-      const top  = Math.random() * 90;
-      const left = Math.random() * 90;
 
       el.style.fontSize = size + 'px';
-      el.style.top  = top + '%';
-      el.style.left = left + '%';
+      el.style.top  = (Math.random() * 90) + '%';
+      el.style.left = (Math.random() * 90) + '%';
 
       if (cfg.anim === 'float-across') {
         el.style.animation = `${cfg.anim} ${dur}s linear ${delay}s infinite`;
@@ -134,74 +92,74 @@
   function rnd(min, max) { return Math.random() * (max - min) + min; }
 
   // ---------- BRUSH CHOREOGRAPHY ----------
+  // Brush tip is at the bottom of its SVG. We position the brush so its TIP
+  // lands on the top-left of the swipe (the point it starts painting from).
   const brush = document.getElementById('brush');
   const paletteWrap = document.querySelector('.palette-wrap');
-  const swipes = Array.from(document.querySelectorAll('.swipe, .portfolio-swipe'));
+  const swipeEls = Array.from(document.querySelectorAll('.swipe, .portfolio-swipe'));
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function positionBrushAt(el, offsetX = -20) {
-    if (!el || !paletteWrap) return;
-    const wrapRect = paletteWrap.getBoundingClientRect();
-    const r = el.getBoundingClientRect();
-    const cx = r.left - wrapRect.left + offsetX;
-    const cy = r.top - wrapRect.top + r.height / 2;
-    brush.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%) rotate(22deg)`;
+  function positionBrushTipAt(x, y) {
+    // Brush is 26x78. Tip is at (50%, 100%) of its box. Since transform-origin
+    // is 50% 100%, translate(-50%, -100%) puts the origin (tip) at (x, y).
+    brush.style.transform =
+      `translate(${x}px, ${y}px) translate(-50%, -100%) rotate(22deg)`;
   }
 
   function paintSwipe(el) {
     return new Promise(resolve => {
-      // Move brush to left edge of the swipe
-      positionBrushAt(el, -10);
-      // After brush arrives, reveal the swipe
+      const wrapRect = paletteWrap.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+
+      // Tip target: top-left corner of the swipe
+      const tipX = r.left - wrapRect.left - 4;
+      const tipY = r.top  - wrapRect.top  + 6;
+
+      positionBrushTipAt(tipX, tipY);
+
+      // Wait for travel to complete
       setTimeout(() => {
         el.classList.add('painted');
-        // Move brush along as the reveal happens (roughly 0.5s)
-        setTimeout(resolve, 380);
-      }, 220);
+        // Wait for the reveal to finish
+        setTimeout(resolve, REVEAL_MS);
+      }, TRAVEL_MS);
     });
   }
 
   async function runBrushSequence() {
     if (prefersReducedMotion) {
-      swipes.forEach(s => s.classList.add('painted'));
+      swipeEls.forEach(s => s.classList.add('painted'));
       return;
     }
 
     brush.classList.add('visible');
 
-    for (const swipe of swipes) {
-      await paintSwipe(swipe);
+    // Small entry pause so brush is visible before first move
+    await new Promise(r => setTimeout(r, 200));
+
+    for (const el of swipeEls) {
+      await paintSwipe(el);
     }
 
-    // Brush settles at rest position (lower-center of palette)
+    // Brush rests at lower-center of palette
     const wrapRect = paletteWrap.getBoundingClientRect();
-    const restX = wrapRect.width * 0.5;
-    const restY = wrapRect.height * 0.78;
-    brush.style.transform = `translate(${restX}px, ${restY}px) translate(-50%, -50%) rotate(22deg)`;
+    positionBrushTipAt(wrapRect.width * 0.5, wrapRect.height * 0.82);
+    brush.style.transform += ' rotate(35deg)';
 
-    // Hide brush after a beat
-    setTimeout(() => brush.classList.remove('visible'), 900);
+    // Fade out after a beat
+    setTimeout(() => brush.classList.remove('visible'), 800);
   }
 
-  // Give the browser a frame to lay out before measuring
   requestAnimationFrame(() => {
-    setTimeout(runBrushSequence, 300);
+    setTimeout(runBrushSequence, 200);
   });
 
-  // Re-measure on resize (in case swipes move)
-  window.addEventListener('resize', () => {
-    if (brush.classList.contains('visible')) {
-      // Nothing special — just avoid stale positions
-    }
-  });
-
-  // ---------- MASCOT: AUTO-PLAY, PAUSE, SET CYCLING, FACTS ----------
+  // ---------- MASCOT ----------
   const mascotSprite = document.getElementById('mascotSprite');
   const mascotEl     = document.getElementById('mascot');
   const playPauseBtn = document.getElementById('playPauseBtn');
   const playIcon     = document.getElementById('playIcon');
-  const playLabel    = document.getElementById('playLabel');
   const outfitBtn    = document.getElementById('outfitBtn');
   const speechBubble = document.getElementById('speechBubble');
 
@@ -227,10 +185,7 @@
   }
 
   function stopTimer() {
-    if (frameTimer) {
-      clearInterval(frameTimer);
-      frameTimer = null;
-    }
+    if (frameTimer) { clearInterval(frameTimer); frameTimer = null; }
   }
 
   function setPlaying(playing) {
@@ -238,24 +193,18 @@
     if (playing) {
       startTimer();
       playIcon.textContent = '⏸';
-      playLabel.textContent = 'pause';
       playPauseBtn.setAttribute('aria-label', 'Pause animation');
     } else {
       stopTimer();
       playIcon.textContent = '▶';
-      playLabel.textContent = 'play';
       playPauseBtn.setAttribute('aria-label', 'Play animation');
     }
   }
 
-  // Start autoplay on load
   setPlaying(true);
 
-  playPauseBtn.addEventListener('click', () => {
-    setPlaying(!isPlaying);
-  });
+  playPauseBtn.addEventListener('click', () => setPlaying(!isPlaying));
 
-  // Next outfit cycles sets and restarts at frame 1
   outfitBtn.addEventListener('click', () => {
     const idx = (SET_ORDER.indexOf(currentSet) + 1) % SET_ORDER.length;
     currentSet = SET_ORDER[idx];
@@ -263,7 +212,6 @@
     updateSprite();
   });
 
-  // Tap mascot → show a fact
   let factIndex = 0;
   mascotEl.addEventListener('click', showFact);
   mascotEl.addEventListener('keydown', (e) => {

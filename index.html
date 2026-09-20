@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#2a1420" />
   <title>Painted — Links</title>
 
-  <!-- Preload the default studio + mascot first frame -->
   <link rel="preload" as="image" href="images/studios/artstudio.jpg" />
   <link rel="preload" as="image" href="images/artsy/frame1.png" />
   <link rel="preload" as="image" href="images/photo/frame1.png" />
@@ -18,8 +17,8 @@
 <body data-bg="artstudio">
 
   <!-- Studio background -->
-  <div class="bg-layer" id="bgLayer" aria-hidden="true"></div>
-  <div class="bg-tint" id="bgTint" aria-hidden="true"></div>
+  <div class="bg-layer" aria-hidden="true"></div>
+  <div class="bg-tint" aria-hidden="true"></div>
 
   <!-- Sprite overlays -->
   <div class="sprite-layer" id="spriteButterflies" data-sprite="butterflies" aria-hidden="true"></div>
@@ -27,13 +26,8 @@
   <div class="sprite-layer" id="spriteNotes"       data-sprite="notes"       aria-hidden="true"></div>
   <div class="sprite-layer" id="spriteHearts"      data-sprite="hearts"      aria-hidden="true"></div>
 
-  <!-- Top bar: studio chip + sprite toggles in ONE row -->
+  <!-- Topbar: sprite toggles only -->
   <header class="topbar">
-    <button class="chip chip--studio" id="studioChip" aria-label="Change the studio">
-      <span class="chip-swatch" id="studioSwatch"></span>
-      <span class="chip-label" id="studioLabel">change the studio</span>
-    </button>
-
     <div class="toggles" role="group" aria-label="Sprite toggles">
       <button class="toggle toggle--on" data-toggle="butterflies" aria-pressed="true"  aria-label="Butterflies">🦋</button>
       <button class="toggle"            data-toggle="glitter"     aria-pressed="false" aria-label="Glitter">✨</button>
@@ -47,7 +41,7 @@
 
     <div class="palette-wrap">
 
-      <!-- Real SVG palette -->
+      <!-- Palette SVG -->
       <svg class="palette" viewBox="0 0 400 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <filter id="woodgrain" x="-5%" y="-5%" width="110%" height="110%">
@@ -96,28 +90,7 @@
       <!-- Content overlay -->
       <div class="palette-content">
 
-        <!-- Etched quote, visible from the start -->
-        <div class="quote-wrap">
-          <svg class="quote-etch" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <filter id="burn" x="-10%" y="-10%" width="120%" height="120%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5" result="noise"/>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2"/>
-              </filter>
-            </defs>
-            <text filter="url(#burn)" x="160" y="34" text-anchor="middle"
-                  font-family="Georgia, serif" font-style="italic" font-size="14"
-                  fill="#3d2410" opacity="0.95">"Art is not what you see,</text>
-            <text filter="url(#burn)" x="160" y="56" text-anchor="middle"
-                  font-family="Georgia, serif" font-style="italic" font-size="14"
-                  fill="#3d2410" opacity="0.95">but what you make others see."</text>
-            <text filter="url(#burn)" x="160" y="78" text-anchor="middle"
-                  font-family="Georgia, serif" font-size="10" letter-spacing="2"
-                  fill="#3d2410" opacity="0.8">— EDGAR DEGAS</text>
-          </svg>
-        </div>
-
-        <!-- Painting group (Instagram business only) -->
+        <!-- Swipes -->
         <div class="group group--painting">
           <a class="swipe swipe--ig-paint" href="#" target="_blank" rel="noopener" aria-label="Painting Instagram">
             <span class="swipe-reveal">
@@ -149,7 +122,6 @@
           </a>
         </div>
 
-        <!-- Social group (TikTok + YouTube) -->
         <div class="group group--social">
           <a class="swipe swipe--tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok">
             <span class="swipe-reveal">
@@ -203,7 +175,6 @@
           </a>
         </div>
 
-        <!-- Portfolio swipe -->
         <a class="portfolio-swipe" href="#" target="_blank" rel="noopener" aria-label="Portfolio">
           <span class="swipe-reveal">
             <svg class="portfolio-brush" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
@@ -230,7 +201,28 @@
 
       </div>
 
-      <!-- Animated paintbrush (moves via JS) -->
+      <!-- Quote, always visible above swipes -->
+      <div class="quote-layer">
+        <svg class="quote-etch" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="burn" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2"/>
+            </filter>
+          </defs>
+          <text filter="url(#burn)" x="160" y="34" text-anchor="middle"
+                font-family="Georgia, serif" font-style="italic" font-size="14"
+                fill="#3d2410" opacity="0.95">"Art is not what you see,</text>
+          <text filter="url(#burn)" x="160" y="56" text-anchor="middle"
+                font-family="Georgia, serif" font-style="italic" font-size="14"
+                fill="#3d2410" opacity="0.95">but what you make others see."</text>
+          <text filter="url(#burn)" x="160" y="78" text-anchor="middle"
+                font-family="Georgia, serif" font-size="10" letter-spacing="2"
+                fill="#3d2410" opacity="0.8">— EDGAR DEGAS</text>
+        </svg>
+      </div>
+
+      <!-- Brush -->
       <div class="brush" id="brush" aria-hidden="true">
         <svg viewBox="0 0 40 120" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 4 q2 -3 4 0 l3 58 q-5 3 -10 0 z" fill="#7a4a2a" stroke="#4a2a12" stroke-width="0.8"/>
@@ -240,48 +232,40 @@
         </svg>
       </div>
 
-    </div>
+      <!-- Windows 98 Paint window — overlapping bottom-right of palette -->
+      <div class="paint-window" role="region" aria-label="Pixel me">
+        <div class="pw-titlebar">
+          <span class="pw-title">pixel me</span>
+          <div class="pw-buttons" aria-hidden="true">
+            <span class="pw-btn">_</span>
+            <span class="pw-btn">□</span>
+            <span class="pw-btn pw-btn--close">×</span>
+          </div>
+        </div>
 
-    <!-- Windows 98 Paint window with avatar -->
-    <div class="paint-window" role="region" aria-label="Pixel me">
-      <div class="pw-titlebar">
-        <span class="pw-title">pixel me — untitled.png</span>
-        <div class="pw-buttons" aria-hidden="true">
-          <span class="pw-btn">_</span>
-          <span class="pw-btn">□</span>
-          <span class="pw-btn pw-btn--close">×</span>
+        <div class="pw-canvas">
+          <div class="mascot" id="mascot" role="button" tabindex="0" aria-label="Tap to hear a fact">
+            <img class="mascot-sprite" id="mascotSprite"
+                 src="images/artsy/frame1.png" alt="" draggable="false" />
+            <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="pw-toolbar">
+          <button class="pw-tool" id="playPauseBtn" aria-label="Pause animation">
+            <span class="pw-tool-icon" id="playIcon">⏸</span>
+          </button>
+          <button class="pw-tool" id="outfitBtn" aria-label="Next outfit">
+            <span class="pw-tool-icon">👗</span>
+          </button>
+        </div>
+
+        <div class="pw-status" aria-hidden="true">
+          <span class="pw-status-cell">click the avatar to learn more</span>
         </div>
       </div>
 
-      <div class="pw-menubar" aria-hidden="true">
-        <span>File</span><span>Edit</span><span>View</span><span>Image</span><span>Options</span><span>Help</span>
-      </div>
-
-      <div class="pw-canvas">
-        <div class="mascot" id="mascot" role="button" tabindex="0" aria-label="Tap to hear a fact">
-          <img class="mascot-sprite" id="mascotSprite"
-               src="images/artsy/frame1.png" alt="" draggable="false" />
-          <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite"></div>
-        </div>
-      </div>
-
-      <div class="pw-toolbar">
-        <button class="pw-tool" id="playPauseBtn" aria-label="Play or pause animation">
-          <span class="pw-tool-icon" id="playIcon">⏸</span>
-          <span class="pw-tool-label" id="playLabel">pause</span>
-        </button>
-        <button class="pw-tool" id="outfitBtn" aria-label="Next outfit">
-          <span class="pw-tool-icon">👗</span>
-          <span class="pw-tool-label">next outfit</span>
-        </button>
-      </div>
-
-      <div class="pw-status" aria-hidden="true">
-        <span class="pw-status-cell">For Help, click Help Topics on the Help Menu.</span>
-        <span class="pw-status-cell">100%</span>
-      </div>
     </div>
-
   </main>
 
   <script src="js/animation.js"></script>
