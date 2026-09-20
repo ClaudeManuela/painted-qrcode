@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Links</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0d0a14;
+      font-family: 'Georgia', serif;
+      color: #f5e6ff;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+      max-width: 380px;
+      z-index: 2;
+    }
+
+    /* Butterfly placeholder — replace this div with your SVG animation later */
+    .butterfly-placeholder {
+      width: 180px;
+      height: 180px;
+      border: 2px dashed rgba(245, 230, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: rgba(245, 230, 255, 0.4);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: normal;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .link-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      text-align: center;
+      text-decoration: none;
+      color: #f5e6ff;
+      background: rgba(245, 230, 255, 0.06);
+      border: 1px solid rgba(245, 230, 255, 0.25);
+      border-radius: 12px;
+      font-size: 15px;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .link-btn:hover {
+      background: rgba(245, 230, 255, 0.15);
+      border-color: rgba(245, 230, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .quote {
+      margin-top: 50px;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(245, 230, 255, 0.5);
+      text-align: center;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    .quote-author {
+      display: block;
+      margin-top: 8px;
+      font-style: normal;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: rgba(245, 230, 255, 0.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Butterfly animation will go here later -->
+    <div class="butterfly-placeholder">🦋 animation here</div>
+
+    <h1>YOUR NAME</h1>
+
+    <!-- Painting business Instagram -->
+    <a class="link-btn" href="https://instagram.com/yourpaintingpage" target="_blank" rel="noopener">
+      Painting Instagram
+    </a>
+
+    <!-- Painting business website (Readymag placeholder for now) -->
+    <a class="link-btn" href="#" target="_blank" rel="noopener">
+      Painting Website — Coming Soon
+    </a>
+
+    <!-- TikTok -->
+    <a class="link-btn" href="https://tiktok.com/@yourhandle" target="_blank" rel="noopener">
+      TikTok
+    </a>
+
+    <!-- Portfolio on Neocities -->
+    <a class="link-btn" href="https://yourname.neocities.org" target="_blank" rel="noopener">
+      Portfolio
+    </a>
+
+    <p class="quote">
+      "Art is not what you see, but what you make others see."
+      <span class="quote-author">— Edgar Degas</span>
+    </p>
+
+  </div>
+</body>
+</html>
