@@ -1,6 +1,6 @@
 /* ============================================================
    PAINTED — animation.js
-   Sprites, click-to-paint brush choreography, Win98 mascot
+   Real-brushstroke reveal, brush choreography, Win98 mascot
    ============================================================ */
 
 (() => {
@@ -15,10 +15,9 @@
   const SET_ORDER = ['artsy', 'photo', 'glasses', 'howdy'];
   const FRAME_MS = 300;
 
-  // Animation timing
-  const TRAVEL_MS = 200;
-  const REVEAL_MS = 400;
-  const OVERLAP_MS = 80;
+  const TRAVEL_MS = 220;
+  const REVEAL_MS = 500;
+  const OVERLAP_MS = 100;
 
   const FACTS = [
     "I paint with my heart, not just my hands.",
@@ -54,15 +53,12 @@
       const el = document.createElement('div');
       el.className = 'sprite';
       el.textContent = cfg.glyphs[Math.floor(Math.random() * cfg.glyphs.length)];
-
       const size  = rnd(cfg.size[0], cfg.size[1]);
       const dur   = rnd(cfg.dur[0],  cfg.dur[1]);
       const delay = Math.random() * dur;
-
       el.style.fontSize = size + 'px';
       el.style.top  = (Math.random() * 90) + '%';
       el.style.left = (Math.random() * 90) + '%';
-
       if (cfg.anim === 'float-across') {
         el.style.animation = `${cfg.anim} ${dur}s linear ${delay}s infinite`;
       } else if (cfg.anim === 'float-up') {
@@ -70,7 +66,6 @@
       } else {
         el.style.animation = `${cfg.anim} ${dur}s ease-in-out ${delay}s infinite`;
       }
-
       container.appendChild(el);
     }
   }
@@ -91,7 +86,7 @@
 
   function rnd(min, max) { return Math.random() * (max - min) + min; }
 
-  // ---------- BRUSH CHOREOGRAPHY ----------
+  // ---------- BRUSH + REVEAL ----------
   const brush = document.getElementById('brush');
   const paletteWrap = document.querySelector('.palette-wrap');
   const vial = document.getElementById('vial');
@@ -102,63 +97,55 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Brush box is 26x78. Tip is at (50%, 100%). transform-origin is 50% 100%.
-  function tipTo(x, y) {
-    return `translate(${x}px, ${y}px) translate(-50%, -100%) rotate(22deg)`;
+  function tipTo(x, y, rot = 22) {
+    return `translate(${x}px, ${y}px) translate(-50%, -100%) rotate(${rot}deg)`;
   }
 
-  function getTip(el, offsetX = -6, offsetY = 6) {
-    const wrapRect = paletteWrap.getBoundingClientRect();
-    const r = el.getBoundingClientRect();
-    return {
-      x: r.left - wrapRect.left + offsetX,
-      y: r.top  - wrapRect.top  + offsetY
-    };
-  }
-
-  async function moveTipTo(x, y, duration = TRAVEL_MS, easing = 'ease-out') {
-    const from = brush.getBoundingClientRect();
-    const wrapRect = paletteWrap.getBoundingClientRect();
-    // We can't easily read the transform; use Web Animations API with
-    // current computed transform as start.
+  async function moveTipTo(x, y, duration = TRAVEL_MS, easing = 'ease-out', rot = 22) {
     const current = getComputedStyle(brush).transform;
-    const start = current === 'none'
-      ? tipTo(x, y)
-      : current;
-
+    const start = current === 'none' ? tipTo(x, y, rot) : current;
     const anim = brush.animate(
-      [
-        { transform: start },
-        { transform: tipTo(x, y) }
-      ],
+      [{ transform: start }, { transform: tipTo(x, y, rot) }],
       { duration, easing, fill: 'forwards' }
     );
     await anim.finished;
   }
 
-  async function revealSwipe(el) {
-    const reveal = el.querySelector('.swipe-reveal');
-    const anim = reveal.animate(
+  async function dip(intoEl, ms = 260) {
+    const anim = brush.animate(
       [
-        { clipPath: 'inset(0 100% 0 0)' },
-        { clipPath: 'inset(0 0 0 0)' }
+        { transform: getComputedStyle(brush).transform },
+        { transform: getComputedStyle(brush).transform + ' scale(0.86)' },
+        { transform: getComputedStyle(brush).transform }
       ],
-      { duration: REVEAL_MS, easing: 'ease-out', fill: 'forwards' }
+      { duration: ms, easing: 'ease-in-out' }
     );
     await anim.finished;
   }
 
-  async function dipInto(el, dipMs = 260) {
-    // Small scale-bounce to simulate dipping
-    const anim = brush.animate(
-      [
-        { transform: getComputedStyle(brush).transform + ' scale(1)' },
-        { transform: getComputedStyle(brush).transform + ' scale(0.86)' },
-        { transform: getComputedStyle(brush).transform + ' scale(1)' }
-      ],
-      { duration: dipMs, easing: 'ease-in-out' }
-    );
-    await anim.finished;
+  function revealSwipe(el) {
+    return new Promise(resolve => {
+      const paint = el.querySelector('.swipe-paint');
+      if (!paint) return resolve();
+      const anim = paint.animate(
+        [
+          { '--reveal': '0%' },
+          { '--reveal': '100%' }
+        ],
+        { duration: REVEAL_MS, easing: 'ease-out', fill: 'forwards' }
+      );
+      // Fallback for browsers that don't animate custom properties natively
+      // by also toggling the CSS variable directly.
+      paint.style.setProperty('--reveal', '0%');
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / REVEAL_MS);
+        paint.style.setProperty('--reveal', (t * 100) + '%');
+        if (t < 1) requestAnimationFrame(step);
+        else resolve();
+      }
+      requestAnimationFrame(step);
+    });
   }
 
   let hasPainted = false;
@@ -167,12 +154,12 @@
   async function runBrushSequence() {
     if (isPainting || hasPainted) return;
     isPainting = true;
-
     startButtons.classList.add('hidden');
 
     if (prefersReducedMotion) {
       swipeEls.forEach(el => {
-        el.querySelector('.swipe-reveal').style.clipPath = 'inset(0 0 0 0)';
+        const p = el.querySelector('.swipe-paint');
+        if (p) p.style.setProperty('--reveal', '100%');
       });
       hasPainted = true;
       isPainting = false;
@@ -180,41 +167,48 @@
     }
 
     brush.classList.add('visible');
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 80));
 
-    // Start position: upper-left, near the vial
     const wrapRect = paletteWrap.getBoundingClientRect();
-    await moveTipTo(wrapRect.width * 0.18, wrapRect.height * 0.18, 260);
+
+    // Enter from upper-left
+    await moveTipTo(wrapRect.width * 0.18, wrapRect.height * 0.22, 260);
 
     // Dip into vial
-    const vialRect = vial.getBoundingClientRect();
-    const vialTipX = vialRect.left - wrapRect.left + vialRect.width / 2;
-    const vialTipY = vialRect.top  - wrapRect.top  + vialRect.height * 0.75;
-    await moveTipTo(vialTipX, vialTipY, 220);
-    await dipInto(vial);
+    const vr = vial.getBoundingClientRect();
+    await moveTipTo(
+      vr.left - wrapRect.left + vr.width / 2,
+      vr.top  - wrapRect.top  + vr.height * 0.75,
+      220
+    );
+    await dip(vial);
 
-    // Paint each swipe
+    // Paint each swipe: move brush to swipe start, then reveal
     for (const el of swipeEls) {
-      const { x, y } = getTip(el, -6, 8);
-      await moveTipTo(x, y, TRAVEL_MS);
+      const r = el.getBoundingClientRect();
+      const startX = r.left - wrapRect.left + 6;
+      const startY = r.top  - wrapRect.top  + 8;
+      await moveTipTo(startX, startY, TRAVEL_MS);
 
-      // Start reveal, then overlap into the next travel
       const revealPromise = revealSwipe(el);
-      await new Promise(r => setTimeout(r, Math.max(0, REVEAL_MS - OVERLAP_MS)));
+      await new Promise(res => setTimeout(res, Math.max(0, REVEAL_MS - OVERLAP_MS)));
       await revealPromise;
     }
 
-    // Dip into mini palette strip (bottom of paint window)
+    // Dip into mini palette strip
     const strip = document.querySelector('.pw-palette-strip');
     if (strip) {
       const sr = strip.getBoundingClientRect();
-      await moveTipTo(sr.left - wrapRect.left + sr.width / 2,
-                      sr.top  - wrapRect.top  + sr.height * 0.6, 240);
-      await dipInto(strip, 220);
+      await moveTipTo(
+        sr.left - wrapRect.left + sr.width / 2,
+        sr.top  - wrapRect.top  + sr.height * 0.6,
+        240
+      );
+      await dip(strip, 220);
     }
 
-    // Settle into thumb hole (lower-center of palette)
-    await moveTipTo(wrapRect.width * 0.5, wrapRect.height * 0.88, 260, 'ease-in-out');
+    // Settle in thumb hole
+    await moveTipTo(wrapRect.width * 0.5, wrapRect.height * 0.88, 260, 'ease-in-out', 35);
 
     hasPainted = true;
     isPainting = false;
@@ -224,7 +218,8 @@
     if (hasPainted) return;
     startButtons.classList.add('hidden');
     swipeEls.forEach(el => {
-      el.querySelector('.swipe-reveal').style.clipPath = 'inset(0 0 0 0)';
+      const p = el.querySelector('.swipe-paint');
+      if (p) p.style.setProperty('--reveal', '100%');
     });
     hasPainted = true;
   }
@@ -232,10 +227,7 @@
   clickBtn.addEventListener('click', runBrushSequence);
   skipBtn.addEventListener('click', skipToLinks);
 
-  // Auto-paint after 8 seconds
-  setTimeout(() => {
-    if (!hasPainted) runBrushSequence();
-  }, 8000);
+  setTimeout(() => { if (!hasPainted) runBrushSequence(); }, 8000);
 
   // ---------- MASCOT ----------
   const mascotSprite = document.getElementById('mascotSprite');
