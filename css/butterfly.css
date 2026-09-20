@@ -1,21 +1,11 @@
 /* ============================================================
    PAINTED — Link page styles
-   Mobile-first, Winx-inspired palette with brand-accurate swipes
+   Mobile-first, brushstroke swipes, rotating studios
    ============================================================ */
 
-/* ---------- Reset & base ---------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html,
-body {
-  height: 100%;
-}
+html, body { height: 100%; }
 
 body {
   font-family: 'Georgia', 'Times New Roman', serif;
@@ -32,48 +22,32 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ---------- Background layer (4 studio moods) ---------- */
+/* ---------- Background layer ---------- */
 .bg-layer {
   position: fixed;
   inset: 0;
   z-index: -1;
-  transition: opacity 0.8s ease;
-  background: #f2e6d8;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.7s ease, background-image 0.7s ease;
 }
 
-/* 1. Art studio (default) — warm cream, soft pink + gold wash */
-body[data-bg="studio"] .bg-layer {
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255, 200, 180, 0.45), transparent 55%),
-    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.25), transparent 50%),
-    linear-gradient(160deg, #f7ecdf 0%, #f0dcd0 100%);
+body[data-bg="artstudio"]    .bg-layer { background-image: url("../images/studios/artstudio.jpg"); }
+body[data-bg="fashionstudio"] .bg-layer { background-image: url("../images/studios/fashionstudio.jpg"); }
+body[data-bg="cozycafe"]     .bg-layer { background-image: url("../images/studios/cozycafe.jpg"); }
+body[data-bg="monetgarden"]  .bg-layer { background-image: url("../images/studios/monetgarden.jpg"); }
+
+/* Subtle vignette so text stays readable over busy images */
+.bg-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(40, 10, 30, 0.25) 100%);
+  pointer-events: none;
 }
 
-/* 2. Deep velvet — burgundy with purple vignette */
-body[data-bg="velvet"] .bg-layer {
-  background:
-    radial-gradient(circle at 50% 30%, rgba(120, 40, 80, 0.55), transparent 65%),
-    linear-gradient(180deg, #3a0f22 0%, #1a0510 100%);
-}
-
-/* 3. Midnight bloom — dark purple/indigo, pink glow */
-body[data-bg="midnight"] .bg-layer {
-  background:
-    radial-gradient(circle at 70% 25%, rgba(255, 130, 190, 0.35), transparent 55%),
-    radial-gradient(circle at 25% 80%, rgba(140, 80, 200, 0.4), transparent 60%),
-    linear-gradient(160deg, #1c0b2e 0%, #0b0418 100%);
-}
-
-/* 4. Paper texture — warm cream watercolor with gold flecks */
-body[data-bg="paper"] .bg-layer {
-  background:
-    radial-gradient(circle at 15% 40%, rgba(212, 175, 55, 0.2), transparent 40%),
-    radial-gradient(circle at 85% 70%, rgba(255, 180, 200, 0.25), transparent 45%),
-    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.012) 0 2px, transparent 2px 4px),
-    #f4ead9;
-}
-
-/* ---------- Background switch (top-right) ---------- */
+/* ---------- Background switch ---------- */
 .bg-switch {
   position: fixed;
   top: 14px;
@@ -84,6 +58,7 @@ body[data-bg="paper"] .bg-layer {
   gap: 8px;
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 999px;
   padding: 8px 12px 8px 8px;
@@ -93,12 +68,10 @@ body[data-bg="paper"] .bg-layer {
   font-size: 11px;
   letter-spacing: 0.04em;
   transition: transform 0.25s ease, background 0.3s ease;
-  box-shadow: 0 4px 14px rgba(80, 20, 60, 0.15);
+  box-shadow: 0 4px 14px rgba(80, 20, 60, 0.18);
 }
 
-.bg-switch:active {
-  transform: scale(0.94);
-}
+.bg-switch:active { transform: scale(0.94); }
 
 .bg-swatch {
   width: 22px;
@@ -115,20 +88,15 @@ body[data-bg="paper"] .bg-layer {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
 
-.bg-switch.rotated .bg-swatch {
-  transform: rotate(360deg);
-}
+.bg-switch.rotated .bg-swatch { transform: rotate(360deg); }
 
 .bg-hint {
-  transition: opacity 0.6s ease;
+  transition: opacity 0.7s ease;
   opacity: 1;
   white-space: nowrap;
 }
 
-.bg-hint.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+.bg-hint.hidden { opacity: 0; pointer-events: none; }
 
 /* ---------- Stage ---------- */
 .stage {
@@ -146,41 +114,42 @@ body[data-bg="paper"] .bg-layer {
 .palette-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5.4;
+  aspect-ratio: 4 / 5.2;
   transform: rotate(-8deg);
   transform-origin: center;
-  margin: 8px auto 40px;
+  margin: 8px auto 36px;
 }
 
-.palette {
+/* Kidney-shaped palette via SVG mask */
+.palette-wrap::before {
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 18px 30px rgba(60, 20, 40, 0.28));
+  background: #f6e9d4;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(120, 70, 40, 0.22),
+    0 18px 32px rgba(60, 20, 40, 0.28);
+  -webkit-mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 520'>\
+<path d='M200 20 C300 20 375 90 380 200 C385 300 340 400 250 460 C220 480 190 495 160 490 C130 485 100 460 80 420 C50 360 30 290 30 210 C30 100 100 20 200 20 Z M200 465 C215 465 225 455 225 442 C225 429 215 420 200 420 C185 420 175 429 175 442 C175 455 185 465 200 465 Z' fill-rule='evenodd'/>\
+</svg>") center / contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 520'>\
+<path d='M200 20 C300 20 375 90 380 200 C385 300 340 400 250 460 C220 480 190 495 160 490 C130 485 100 460 80 420 C50 360 30 290 30 210 C30 100 100 20 200 20 Z M200 465 C215 465 225 455 225 442 C225 429 215 420 200 420 C185 420 175 429 175 442 C175 455 185 465 200 465 Z' fill-rule='evenodd'/>\
+</svg>") center / contain no-repeat;
+  z-index: 0;
 }
 
-.palette-body {
-  fill: #f6e9d4;
-  stroke: rgba(120, 70, 40, 0.25);
-  stroke-width: 1.5;
-}
-
-.palette-hole {
-  fill: rgba(180, 140, 100, 0.18);
-  stroke: rgba(120, 70, 40, 0.2);
-  stroke-width: 1.5;
-}
-
-/* ---------- Swipes overlay ---------- */
+/* Group containers, sit above palette */
 .swipes {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 22px;
-  padding: 22% 14% 26%;
+  gap: 26px;
+  padding: 20% 10% 26%;
+  z-index: 1;
 }
 
 .group {
@@ -190,131 +159,97 @@ body[data-bg="paper"] .bg-layer {
   gap: 10px;
 }
 
-/* The visual grouping spacing — bigger gap between groups */
-.group--social {
-  margin-top: 6px;
-}
+.group--social { margin-top: 4px; }
 
 .swipe-row {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
   flex-wrap: nowrap;
+  width: 100%;
 }
 
-/* ---------- Swipe base ---------- */
+/* ---------- Swipe (brushstroke) ---------- */
 .swipe {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 999px;
+  justify-content: flex-end;
   text-decoration: none;
   color: #fff;
-  position: relative;
-  isolation: isolate;
-  transition: transform 0.25s ease, filter 0.25s ease;
+  transition: transform 0.25s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.swipe:active {
-  transform: scale(0.93);
-}
+.swipe:active { transform: scale(0.95); }
 
-/* Paint-stroke texture via inner highlight */
-.swipe::before {
-  content: "";
+.swipe-brush {
   position: absolute;
-  inset: 1px;
-  border-radius: inherit;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.28),
-    rgba(255, 255, 255, 0) 45%,
-    rgba(0, 0, 0, 0.12)
-  );
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(60, 20, 40, 0.28));
   pointer-events: none;
-  z-index: 1;
 }
 
-.swipe-icon {
-  width: 55%;
-  height: 55%;
+.swipe-logo {
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+  margin-right: 6px;
 }
 
-.swipe-label {
-  display: none; /* icons only on mobile */
+.swipe-logo svg {
+  width: 60%;
+  height: 60%;
+  display: block;
 }
 
-/* --- Painting business swipes (medium, top group) --- */
-.swipe--ig-paint,
-.swipe--site-paint {
-  width: 72px;
-  height: 72px;
-  box-shadow:
-    0 6px 14px rgba(120, 40, 80, 0.28),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.15);
-}
-
-.swipe--ig-paint {
-  background:
-    radial-gradient(circle at 30% 25%, #ffd76a 0%, transparent 45%),
-    linear-gradient(135deg, #f7931e 0%, #e1306c 45%, #833ab4 100%);
-}
-
-.swipe--site-paint {
-  background:
-    radial-gradient(circle at 30% 25%, #ffe9a8 0%, transparent 50%),
-    linear-gradient(160deg, #d4af37 0%, #b8860b 60%, #7a2b4d 100%);
-  color: #fff8e0;
-}
-
-/* --- Social swipes (smaller, bottom group) --- */
-.swipe--tiktok,
-.swipe--ig-social,
-.swipe--yt {
-  width: 56px;
+/* Painting group: medium swipes */
+.group--painting .swipe {
+  width: 132px;
   height: 56px;
-  box-shadow:
-    0 5px 12px rgba(40, 10, 40, 0.3),
-    inset 0 -2px 5px rgba(0, 0, 0, 0.18);
 }
 
-.swipe--tiktok {
-  background: #0a0a0a;
-  color: #fff;
-  box-shadow:
-    -2px 0 0 #25f4ee,
-    2px 0 0 #fe2c55,
-    0 5px 12px rgba(0, 0, 0, 0.4);
+.group--painting .swipe-logo {
+  width: 34px;
+  height: 34px;
 }
 
-.swipe--ig-social {
-  background:
-    radial-gradient(circle at 30% 25%, #ffd76a 0%, transparent 45%),
-    linear-gradient(135deg, #f7931e 0%, #e1306c 45%, #833ab4 100%);
+/* Social group: smaller swipes */
+.group--social .swipe {
+  width: 100px;
+  height: 46px;
 }
 
-.swipe--yt {
-  background:
-    radial-gradient(circle at 30% 25%, #ff6b6b 0%, transparent 55%),
-    #cc0000;
+.group--social .swipe-logo {
+  width: 28px;
+  height: 28px;
 }
 
-/* ---------- Brush slot (placeholder for now) ---------- */
-.brush-slot {
+/* ---------- Brush (center of palette) ---------- */
+.brush {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px;
-  height: 120px;
-  opacity: 0.25;
-  border-radius: 12px;
-  border: 1.5px dashed rgba(120, 70, 40, 0.35);
+  width: 32px;
+  height: 96px;
+  transform: translate(-50%, -50%) rotate(28deg);
+  z-index: 3;
   pointer-events: none;
+  filter: drop-shadow(0 6px 10px rgba(60, 20, 40, 0.35));
+  opacity: 0.92;
 }
+
+.brush svg { width: 100%; height: 100%; }
 
 /* ---------- Corner: portfolio + mascot ---------- */
 .corner {
@@ -324,31 +259,31 @@ body[data-bg="paper"] .bg-layer {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 4px;
   padding-right: 6px;
-  margin-top: -10px;
+  margin-top: -14px;
 }
 
 .portfolio {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 28px;
-  min-width: 150px;
+  padding: 14px 26px;
+  min-width: 140px;
   text-decoration: none;
   color: #f5e6c8;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   background:
-    radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.35), transparent 60%),
+    radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.4), transparent 60%),
     linear-gradient(135deg, #7a2b4d 0%, #5a1732 100%);
   border: 2px solid #d4af37;
   border-radius: 42% 58% 55% 45% / 50% 45% 55% 50%;
   transform: rotate(-3deg);
   box-shadow:
     0 8px 20px rgba(90, 20, 60, 0.4),
-    inset 0 0 22px rgba(212, 175, 55, 0.18);
+    inset 0 0 22px rgba(212, 175, 55, 0.2);
   transition: transform 0.25s ease;
   position: relative;
 }
@@ -358,15 +293,19 @@ body[data-bg="paper"] .bg-layer {
   position: absolute;
   inset: -3px;
   border-radius: inherit;
-  background: linear-gradient(120deg, transparent 30%, rgba(212, 175, 55, 0.5) 50%, transparent 70%);
-  opacity: 0.6;
+  background: linear-gradient(120deg, transparent 30%, rgba(212, 175, 55, 0.55) 50%, transparent 70%);
+  opacity: 0.65;
   pointer-events: none;
   mix-blend-mode: screen;
+  animation: shimmer 3.5s linear infinite;
 }
 
-.portfolio:active {
-  transform: rotate(-3deg) scale(0.96);
+@keyframes shimmer {
+  0%   { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
 }
+
+.portfolio:active { transform: rotate(-3deg) scale(0.96); }
 
 .portfolio-label {
   position: relative;
@@ -377,48 +316,43 @@ body[data-bg="paper"] .bg-layer {
 
 /* ---------- Mascot ---------- */
 .mascot {
-  width: 80px;
-  height: 80px;
+  width: 84px;
+  height: 84px;
   align-self: flex-end;
-  margin-right: 12px;
+  margin-right: 8px;
   margin-top: -6px;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   transition: transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.mascot:active {
-  transform: scale(0.92);
-}
+.mascot:active { transform: scale(0.92); }
 
 .mascot-sprite {
   width: 100%;
   height: 100%;
-  border-radius: 12px;
-  border: 1.5px dashed rgba(120, 70, 40, 0.35);
-  background: rgba(255, 255, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: rgba(120, 70, 40, 0.6);
-  text-align: center;
-  padding: 4px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* ---------- Quote ---------- */
 .quote {
-  margin-top: 36px;
+  margin-top: 32px;
   text-align: center;
   max-width: 320px;
-  color: rgba(70, 30, 50, 0.75);
+  color: rgba(60, 25, 45, 0.8);
   font-style: italic;
   font-size: 13px;
   line-height: 1.6;
   padding: 0 12px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
 .quote span {
@@ -428,19 +362,14 @@ body[data-bg="paper"] .bg-layer {
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(70, 30, 50, 0.55);
+  color: rgba(60, 25, 45, 0.6);
 }
 
-/* Dark backgrounds need light quote text */
 body[data-bg="velvet"] .quote,
-body[data-bg="midnight"] .quote {
-  color: rgba(245, 230, 255, 0.7);
-}
+body[data-bg="midnight"] .quote { color: rgba(245, 230, 255, 0.75); }
 
 body[data-bg="velvet"] .quote span,
-body[data-bg="midnight"] .quote span {
-  color: rgba(245, 230, 255, 0.5);
-}
+body[data-bg="midnight"] .quote span { color: rgba(245, 230, 255, 0.5); }
 
 body[data-bg="velvet"] .bg-switch,
 body[data-bg="midnight"] .bg-switch {
@@ -451,41 +380,18 @@ body[data-bg="midnight"] .bg-switch {
 
 /* ---------- Larger screens ---------- */
 @media (min-width: 700px) {
-  .stage,
-  .corner {
-    max-width: 520px;
-  }
-
-  .swipe--ig-paint,
-  .swipe--site-paint {
-    width: 88px;
-    height: 88px;
-  }
-
-  .swipe--tiktok,
-  .swipe--ig-social,
-  .swipe--yt {
-    width: 68px;
-    height: 68px;
-  }
-
-  .portfolio {
-    padding: 20px 36px;
-    min-width: 180px;
-    font-size: 16px;
-  }
-
-  .mascot {
-    width: 96px;
-    height: 96px;
-  }
+  .stage, .corner { max-width: 520px; }
+  .group--painting .swipe { width: 168px; height: 68px; }
+  .group--painting .swipe-logo { width: 42px; height: 42px; }
+  .group--social .swipe { width: 122px; height: 54px; }
+  .group--social .swipe-logo { width: 32px; height: 32px; }
+  .portfolio { padding: 18px 34px; min-width: 170px; font-size: 15px; }
+  .mascot { width: 100px; height: 100px; }
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
