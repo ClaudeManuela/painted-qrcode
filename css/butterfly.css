@@ -10,6 +10,7 @@ body {
   background: #1a0f18;
   color: #3a1a2c;
   overflow-x: hidden;
+  overflow: hidden;
   position: relative;
   min-height: 100dvh;
   display: flex;
@@ -149,9 +150,9 @@ body {
 .quote-layer {
   position: absolute;
   left: 50%;
-  top: 5%;
+  top: 7%;
   transform: translateX(-50%);
-  width: 72%;
+  width: 76%;
   display: flex;
   justify-content: center;
   pointer-events: none;
@@ -187,8 +188,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 30% 10% 6%;
-  gap: 14px;
+  padding: 28% 10% 6%;
+  gap: 10px;
   z-index: 2;
 }
 
@@ -202,7 +203,7 @@ body {
 .group--social {
   flex-direction: row;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: nowrap;
 }
 
@@ -222,7 +223,7 @@ body {
 .swipe-paint {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   pointer-events: none;
   user-select: none;
@@ -233,8 +234,8 @@ body {
 /* Per-swipe sizing */
 .swipe--business {
   width: 100%;
-  max-width: 260px;
-  height: 90px;
+  max-width: 280px;
+  height: 110px;
 }
 
 .group--social .swipe {
@@ -300,7 +301,7 @@ body {
 .swipe-logo svg { width: 100%; height: 100%; display: block; }
 
 .swipe-logo--end {
-  right: 12px;
+  right: 20px;
   top: 50%;
   transform: translateY(-50%);
   width: 26px;
@@ -309,11 +310,10 @@ body {
 }
 
 /* TikTok + YouTube brand recolour */
-/* Both source images are blue. We use filters to shift them to brand colours. */
 .swipe--tiktok .swipe-paint {
-  /* Blue -> near-black with subtle cyan tint */
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))
-          brightness(0.32) saturate(0.6) hue-rotate(160deg);
+          brightness(0)
+          drop-shadow(0 0 0 #25f4ee);
 }
 
 .swipe--yt .swipe-paint {
@@ -364,7 +364,8 @@ body {
   left: 85%;
   bottom: 6%;
   transform: translateX(-50%);
-  width: 66%;
+  width: 120px; 
+  min-height: 100px;   
   max-width: 125px;
   background: rgba(212, 176, 192, 0.15);
   backdrop-filter: blur(10px);
@@ -417,7 +418,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 58px;
+  min-height: 78px;
   position: relative;
 }
 
@@ -440,8 +441,8 @@ body {
 
 .mascot {
   position: relative;
-  width: 52px;
-  height: 52px;
+  width: 72px;
+  height: 72px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
