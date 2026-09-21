@@ -20,16 +20,16 @@
   const OVERLAP_MS = 120;
 
   const FACTS = [
-    "I paint with my heart, not just my hands.",
-    "My favourite colour is burgundy.",
-    "I've been creating since I was little.",
-    "Butterflies are my favourite muse.",
-    "Every painting holds a little magic.",
-    "I love painting at sunset.",
-    "Glitter makes everything better.",
-    "My studio is my happy place.",
-    "I believe art should feel like a warm hug.",
-    "Follow for more ✨"
+    "omg hi thank you for actually clicking i was worried people wouldn't notice",
+    "I like to change my hair every month, right now my hair is white and curly.",
+    "I made this website by myself (and many other software and hardware gadgets).",
+    "My cat's name is captain america but he answers to Chris Evans too.",
+    "I taught myself 6 languages and I'm learning korean now.",
+    "All of the animations are photos of me that i pixelated one by one to make it animated.",
+    "I have the opposite of a sense of direction, I get lost in ways that shock me.",
+    "it took me like two days to figure out the paint swipe animation,this was most of my weekend.",
+    "my favorite shows are attack on titan, Dr. stone, and assassination classroom.",
+    "uhhh what else....thanks for reading this far!"
   ];
 
   // ---------- SPRITES ----------
@@ -41,9 +41,9 @@
   };
 
   const SPRITE_POOLS = {
-    butterflies: { glyphs: ['🦋'], size: [16, 24], anim: 'float-across', dur: [16, 26], count: 8 },
-    glitter:     { glyphs: ['✨','⭐','💫'], size: [10, 16], anim: 'twinkle', dur: [1.8, 3.2], count: 14 },
-    notes:       { glyphs: ['🎵','🎶'], size: [12, 18], anim: 'float-up', dur: [11, 17], count: 10 },
+    butterflies: { glyphs: ['🦋', '𓂃 ࣪˖ ִֶָ𐀔', 'ཐི༏ཋྀ', '᭪༊'], size: [14, 22], anim: 'float-across', dur: [16, 26], count: 8 },
+    glitter:     { glyphs: ['✨','⭐','💫'], size: [8, 14], anim: 'twinkle', dur: [1.8, 3.2], count: 14 },
+    notes:       { glyphs: ['🎵','🎶'], size: [10, 16], anim: 'float-up', dur: [11, 17], count: 10 },
     hearts:      { glyphs: ['💕','💖','💗'], size: [12, 20], anim: 'float-up', dur: [10, 16], count: 10 }
   };
 
