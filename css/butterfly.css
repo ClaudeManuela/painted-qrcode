@@ -282,9 +282,12 @@ body {
 
 .swipe--website.painted .swipe-cursive { opacity: 1; }
 
-/* Logos on swipes */
+/* Base: centered on every swipe */
 .swipe-logo {
   position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 4;
   display: flex;
   align-items: center;
@@ -292,20 +295,16 @@ body {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease 0.25s;
-}
-
-.swipe.painted .swipe-logo { opacity: 1; }
-
-.swipe-logo svg { width: 100%; height: 100%; display: block; }
-
-.swipe-logo--end {
-  left: 50%;
-  top: 50%;
-  right: auto;
-  transform: translate(-50%, -50%);
   width: 26px;
   height: 26px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+/* Instagram only: pushed to the right end */
+.swipe-logo--end {
+  left: auto;
+  right: 20px;
+  transform: translateY(-50%);
 }
 
 /* TikTok + YouTube brand recolour */
@@ -487,7 +486,7 @@ body {
 .mascot {
   position: relative;
   flex: 1;
-  height: 108px;
+  height: 167px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;

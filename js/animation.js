@@ -233,14 +233,14 @@
       await dipBounce(220);
     }
 
-    // 5. Settle in thumb hole
-    await animateBrush(
-      brushXY,
-      { x: wrapRect.width * 0.5, y: wrapRect.height * 0.88 },
-      260,
-      35,
-      'ease-in-out'
-    );
+    // 5. Settle beside the website swipe (last thing painted)
+await animateBrush(
+  brushXY,
+  { x: brushXY.x + 18, y: brushXY.y + 30 },
+  260,
+  40,
+  'ease-in-out'
+);
 
     hasPainted = true;
     isPainting = false;
