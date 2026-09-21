@@ -38,7 +38,7 @@ body {
   background: rgba(255, 130, 170, 0.22);
 }
 
-/* ---------- Sprite layers ---------- */
+/* ---------- Sprites ---------- */
 .sprite-layer {
   position: fixed;
   inset: 0;
@@ -145,13 +145,13 @@ body {
   filter: drop-shadow(0 18px 32px rgba(60, 20, 40, 0.32));
 }
 
-/* ---------- Quote at top ---------- */
+/* ---------- Quote ---------- */
 .quote-layer {
   position: absolute;
   left: 50%;
-  top: 6%;
+  top: 5%;
   transform: translateX(-50%);
-  width: 70%;
+  width: 72%;
   display: flex;
   justify-content: center;
   pointer-events: none;
@@ -164,13 +164,13 @@ body {
   height: auto;
 }
 
-/* ---------- Vial (upper-left, below quote) ---------- */
+/* ---------- Vial ---------- */
 .vial {
   position: absolute;
-  top: 18%;
-  left: 10%;
-  width: 28px;
-  height: 44px;
+  top: 19%;
+  left: 9%;
+  width: 26px;
+  height: 42px;
   z-index: 4;
   transform: rotate(-6deg);
   filter: drop-shadow(0 3px 6px rgba(60, 20, 40, 0.3));
@@ -187,8 +187,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 26% 12% 6%;
-  gap: 12px;
+  padding: 30% 10% 6%;
+  gap: 14px;
   z-index: 2;
 }
 
@@ -202,94 +202,138 @@ body {
 .group--social {
   flex-direction: row;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: nowrap;
 }
 
 .swipe {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   text-decoration: none;
   color: #fff;
   transition: transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.swipe:active { transform: scale(0.95); }
+.swipe:active { transform: scale(0.96); }
 
-/* The paint layer — real brushstroke image, revealed by mask */
 .swipe-paint {
-  position: absolute;
-  inset: 0;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 var(--reveal, 0%), transparent var(--reveal, 0%));
-  mask-image: linear-gradient(90deg, #000 0%, #000 var(--reveal, 0%), transparent var(--reveal, 0%));
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
   pointer-events: none;
+  user-select: none;
   filter: drop-shadow(0 4px 8px rgba(60, 20, 40, 0.28));
-  /* Fallback color in case image not yet added */
-  background-color: var(--stroke-fallback, transparent);
+  clip-path: inset(0 100% 0 0);
 }
 
-/* Fallback colors per stroke type until images exist */
-.swipe--ig-paint    .swipe-paint { --stroke-fallback: #e1306c; background-image: url("../images/strokes/instagram.png"); }
-.swipe--tiktok      .swipe-paint { --stroke-fallback: #0a0a0a; background-image: url("../images/strokes/tiktok.png"); }
-.swipe--yt          .swipe-paint { --stroke-fallback: #cc0000; background-image: url("../images/strokes/youtube.png"); }
-.swipe--website     .swipe-paint { --stroke-fallback: #7a2b4d; background-image: url("../images/strokes/website.png"); }
+/* Per-swipe sizing */
+.swipe--business {
+  width: 100%;
+  max-width: 260px;
+  height: 90px;
+}
 
+.group--social .swipe {
+  width: 115px;
+  height: 60px;
+}
+
+.swipe--website {
+  width: 200px;
+  height: 200px;
+}
+
+/* ---------- Cursive text overlay ---------- */
+.swipe-cursive {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 22px;
+  padding-right: 56px;
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+  font-size: 22px;
+  color: #fff8ef;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 2px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.2s;
+  line-height: 1;
+  text-align: left;
+}
+
+.swipe--business.painted .swipe-cursive { opacity: 1; }
+
+.swipe-cursive--center {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  font-size: 26px;
+  color: #5a1732;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.swipe--website.painted .swipe-cursive { opacity: 1; }
+
+/* Logos on swipes */
 .swipe-logo {
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.6);
-  margin-right: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.25s;
 }
 
-.swipe-logo svg { width: 62%; height: 62%; display: block; }
+.swipe.painted .swipe-logo { opacity: 1; }
 
-.swipe-label-text {
-  position: relative;
-  z-index: 2;
-  font-family: 'Georgia', serif;
-  font-size: 12px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #f7e6c8;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+.swipe-logo svg { width: 100%; height: 100%; display: block; }
+
+.swipe-logo--end {
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
-/* Sizes */
-.group--painting .swipe--ig-paint { width: 150px; height: 60px; }
-.group--painting .swipe--ig-paint .swipe-logo { width: 36px; height: 36px; }
+/* TikTok + YouTube brand recolour */
+/* Both source images are blue. We use filters to shift them to brand colours. */
+.swipe--tiktok .swipe-paint {
+  /* Blue -> near-black with subtle cyan tint */
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))
+          brightness(0.32) saturate(0.6) hue-rotate(160deg);
+}
 
-.group--social .swipe { width: 120px; height: 48px; }
-.group--social .swipe .swipe-logo { width: 28px; height: 28px; margin-right: 6px; }
-
-.swipe--website {
-  justify-content: center;
-  width: 190px;
-  height: 66px;
+.swipe--yt .swipe-paint {
+  /* Blue -> YouTube red */
+  filter: drop-shadow(0 4px 8px rgba(60, 20, 40, 0.28))
+          brightness(0) saturate(100%)
+          invert(14%) sepia(92%) saturate(7300%) hue-rotate(357deg)
+          brightness(94%) contrast(116%);
 }
 
 /* ---------- Start buttons ---------- */
 .start-buttons {
   position: absolute;
-  top: 42%;
+  top: 47%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   z-index: 6;
   transition: opacity 0.3s ease;
 }
@@ -314,7 +358,7 @@ body {
 .brush.visible { opacity: 0.95; }
 .brush svg { width: 100%; height: 100%; }
 
-/* ---------- Win98 paint window (transparent, your sizing) ---------- */
+/* ---------- Win98 paint window ---------- */
 .paint-window {
   position: absolute;
   left: 85%;
@@ -396,8 +440,8 @@ body {
 
 .mascot {
   position: relative;
-  width: 102px;
-  height: 122px;
+  width: 52px;
+  height: 52px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
@@ -519,12 +563,12 @@ body {
 /* ---------- Larger screens ---------- */
 @media (min-width: 700px) {
   .stage { max-width: 520px; }
-  .group--painting .swipe--ig-paint { width: 180px; height: 72px; }
-  .group--painting .swipe--ig-paint .swipe-logo { width: 46px; height: 46px; }
-  .group--social .swipe { width: 148px; height: 58px; }
-  .group--social .swipe .swipe-logo { width: 36px; height: 36px; }
-  .swipe--website { width: 230px; height: 78px; }
-  .swipe-label-text { font-size: 15px; }
+  .swipe--business { max-width: 320px; height: 110px; }
+  .group--social .swipe { width: 140px; height: 74px; }
+  .swipe--website { width: 240px; height: 240px; }
+  .swipe-cursive { font-size: 26px; padding-left: 28px; padding-right: 68px; }
+  .swipe-cursive--center { font-size: 32px; }
+  .swipe-logo--end { width: 32px; height: 32px; right: 14px; }
   .paint-window { max-width: 150px; }
   .mascot { width: 66px; height: 66px; }
   .quote-etch { max-width: 280px; }
@@ -536,8 +580,7 @@ body {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
-  .swipe-paint {
-    --reveal: 100% !important;
-  }
+  .swipe-paint { clip-path: inset(0 0 0 0) !important; }
+  .swipe-cursive, .swipe-logo { opacity: 1 !important; }
   .brush { display: none; }
 }
