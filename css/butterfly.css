@@ -230,7 +230,6 @@ body {
   clip-path: inset(0 100% 0 0);
 }
 
-/* Per-swipe sizing */
 .swipe--business {
   width: 101%;
   max-width: 136px;
@@ -358,14 +357,14 @@ body {
 .brush svg { width: 100%; height: 100%; }
 
 /* ---------- Win98 paint window ---------- */
+/* Widened and starting at the middle of the palette, extending right. */
 .paint-window {
   position: absolute;
   left: 50%;
-  bottom: -42%;
+  bottom: -38%;
   transform: translateX(0);
-  width: 156px;
-  min-height: 171px;
-  max-width: 125px;
+  width: 200px;
+  min-height: 200px;
   background: rgba(212, 176, 192, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -377,6 +376,8 @@ body {
   color: #2a0a1a;
   user-select: none;
   z-index: 5;
+  display: flex;
+  flex-direction: column;
 }
 
 .pw-titlebar {
@@ -384,77 +385,71 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 2px 3px 2px 5px;
-  background: linear-gradient(90deg, rgba(122, 43, 77, 0.85) 0%, rgba(160, 72, 104, 0.85) 100%);
+  background: linear-gradient(90deg, rgba(122, 43, 77, 0.9) 0%, rgba(160, 72, 104, 0.9) 100%);
   color: #fff;
   font-weight: bold;
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .pw-title { text-shadow: 1px 1px 0 rgba(0,0,0,0.35); }
 .pw-buttons { display: flex; gap: 1px; }
 
 .pw-btn {
-  width: 11px;
-  height: 9px;
-  background: rgba(212, 176, 192, 0.85);
+  width: 12px;
+  height: 10px;
+  background: rgba(212, 176, 192, 0.9);
   border: 1px solid;
   border-color: #f0d8e2 #6a4058 #6a4058 #f0d8e2;
   color: #2a0a1a;
-  font-size: 7px;
-  line-height: 7px;
+  font-size: 8px;
+  line-height: 8px;
   text-align: center;
   font-weight: bold;
 }
 
-/* --- Canvas with icon rail drawn via ::before --- */
+/* Canvas with icon rail on the left */
 .pw-canvas {
   margin: 2px;
-  padding: 5px 5px 5px 26px; /* extra left padding for the rail */
+  padding: 4px;
   background: rgba(255, 248, 239, 0.08);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   border: 1px solid;
   border-color: rgba(106, 64, 88, 0.6) rgba(240, 216, 226, 0.6) rgba(240, 216, 226, 0.6) rgba(106, 64, 88, 0.6);
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  align-items: stretch;
   justify-content: center;
-  min-height: 78px;
+  min-height: 100px;
   position: relative;
+  gap: 4px;
 }
 
-/* The icon rail — 5 small beveled squares down the left side */
-.pw-canvas::before {
-  content: "";
-  position: absolute;
-  left: 3px;
-  top: 3px;
-  bottom: 3px;
-  width: 18px;
-  background:
-    linear-gradient(rgba(255,255,255,0.85) 0 0) 2px 2px / calc(100% - 4px) 6px no-repeat,
-    linear-gradient(rgba(255,255,255,0.6)  0 0) 2px 12px / calc(100% - 4px) 6px no-repeat,
-    linear-gradient(rgba(255,255,255,0.6)  0 0) 2px 22px / calc(100% - 4px) 6px no-repeat,
-    linear-gradient(rgba(255,255,255,0.6)  0 0) 2px 32px / calc(100% - 4px) 6px no-repeat,
-    linear-gradient(rgba(255,255,255,0.6)  0 0) 2px 42px / calc(100% - 4px) 6px no-repeat,
-    rgba(212, 176, 192, 0.45);
+/* Vertical icon rail */
+.pw-iconrail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 20px;
+  padding: 2px;
+  background: rgba(212, 176, 192, 0.4);
   border: 1px solid;
   border-color: rgba(106, 64, 88, 0.55) rgba(240, 216, 226, 0.55) rgba(240, 216, 226, 0.55) rgba(106, 64, 88, 0.55);
-  pointer-events: none;
+  flex-shrink: 0;
 }
 
-/* The first "tool" gets a pressed/highlighted look */
-.pw-canvas::after {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 4px;
-  width: 14px;
-  height: 8px;
+.pw-icon {
+  flex: 1;
+  min-height: 10px;
+  background: rgba(255, 248, 239, 0.7);
+  border: 1px solid;
+  border-color: rgba(240, 216, 226, 0.8) rgba(106, 64, 88, 0.5) rgba(106, 64, 88, 0.5) rgba(240, 216, 226, 0.8);
+}
+
+.pw-icon--active {
   background: rgba(255, 255, 255, 0.95);
-  box-shadow:
-    inset 1px 1px 0 rgba(106, 64, 88, 0.6),
-    inset -1px -1px 0 rgba(240, 216, 226, 0.8);
-  pointer-events: none;
+  border-color: rgba(106, 64, 88, 0.9) rgba(240, 216, 226, 0.9) rgba(240, 216, 226, 0.9) rgba(106, 64, 88, 0.9);
+  box-shadow: inset 1px 1px 0 rgba(106, 64, 88, 0.4);
 }
 
 .pw-palette-strip {
@@ -469,14 +464,14 @@ body {
 
 .pw-palette-strip span {
   flex: 1;
-  height: 7px;
+  height: 8px;
   border: 1px solid rgba(0, 0, 0, 0.35);
   border-radius: 1px;
 }
 
 .mascot {
   position: relative;
-  width: 82px;
+  flex: 1;
   height: 108px;
   cursor: pointer;
   display: flex;
@@ -484,7 +479,6 @@ body {
   justify-content: center;
   transition: transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
-  margin-left: 6px; /* give a bit of room from the icon rail */
 }
 
 .mascot:active { transform: scale(0.95); }
@@ -590,11 +584,11 @@ body {
 
 .pw-status-cell {
   flex: 1;
-  padding: 1px 4px;
+  padding: 2px 4px;
   border: 1px solid;
   border-color: rgba(106, 64, 88, 0.35) rgba(240, 216, 226, 0.35) rgba(240, 216, 226, 0.35) rgba(106, 64, 88, 0.35);
   font-size: 8px;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 /* ---------- Larger screens ---------- */
@@ -605,9 +599,9 @@ body {
   .swipe--website { width: 240px; height: 240px; }
   .swipe-cursive { font-size: 24px; padding-left: 28px; padding-right: 68px; }
   .swipe-cursive--center { font-size: 32px; }
-  .swipe-logo--end { width: 32px; height: 32px; right: 14px; }
-  .paint-window { max-width: 150px; }
-  .mascot { width: 66px; height: 66px; }
+  .swipe-logo--end { width: 32px; height: 32px; }
+  .paint-window { width: 250px; min-height: 240px; }
+  .mascot { height: 140px; }
   .quote-etch { max-width: 280px; }
 }
 
