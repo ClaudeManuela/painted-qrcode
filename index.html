@@ -211,13 +211,75 @@
           </div>
         </div>
 
-        <div class="pw-canvas">
-          <div class="pw-iconrail" aria-hidden="true">
-  <span class="pw-icon pw-icon--active"></span>
-  <span class="pw-icon"></span>
-  <span class="pw-icon"></span>
-  <span class="pw-icon"></span>
-  <span class="pw-icon"></span>
+            <div class="pw-canvas">
+  <div class="pw-iconrail" aria-hidden="true">
+
+    <span class="pw-icon pw-icon--active" title="Brush">
+      <svg viewBox="0 0 16 16">
+        <path d="M11.5 2.5 L13.5 4.5 L6 12 L4 12 L4 10 Z" fill="#5a1732" stroke="#2a0a1a" stroke-width="0.6"/>
+        <path d="M4 12 L4.5 10.5 L6 12 Z" fill="#d4af37" stroke="#2a0a1a" stroke-width="0.5"/>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Pencil">
+      <svg viewBox="0 0 16 16">
+        <path d="M10.5 3 L13 5.5 L6.5 12 L4 12 L4 9.5 Z" fill="#f2e3cb" stroke="#2a0a1a" stroke-width="0.6"/>
+        <path d="M10.5 3 L12 1.5 L14.5 4 L13 5.5 Z" fill="#7a4a2a" stroke="#2a0a1a" stroke-width="0.6"/>
+        <circle cx="5" cy="11" r="0.7" fill="#2a0a1a"/>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Eraser">
+      <svg viewBox="0 0 16 16">
+        <rect x="3" y="6" width="10" height="6" rx="1" fill="#f7a8c8" stroke="#2a0a1a" stroke-width="0.6" transform="rotate(-25 8 9)"/>
+        <rect x="3" y="8.5" width="10" height="3.5" rx="1" fill="#e1306c" stroke="#2a0a1a" stroke-width="0.6" transform="rotate(-25 8 9)"/>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Fill">
+      <svg viewBox="0 0 16 16">
+        <path d="M2.5 8.5 L7 4 L11.5 8.5 L7 13 Z" fill="#833ab4" stroke="#2a0a1a" stroke-width="0.6"/>
+        <path d="M11.5 8.5 L13 4 L14 5 L12.5 9 Z" fill="#d4af37" stroke="#2a0a1a" stroke-width="0.5"/>
+        <circle cx="13.5" cy="11" r="1.6" fill="#e1306c" stroke="#2a0a1a" stroke-width="0.5"/>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Pick color">
+      <svg viewBox="0 0 16 16">
+        <path d="M2.5 13 L3.5 10 L10 3.5 Q11 2.5 12 3.5 Q13 4.5 12 5.5 L5.5 12 L2.5 13 Z" fill="#b9b9c9" stroke="#2a0a1a" stroke-width="0.6"/>
+        <circle cx="12" cy="4.5" r="1.3" fill="#e1306c" stroke="#2a0a1a" stroke-width="0.5"/>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Magnifier">
+      <svg viewBox="0 0 16 16">
+        <circle cx="7" cy="7" r="4" fill="rgba(255,255,255,0.6)" stroke="#2a0a1a" stroke-width="0.8"/>
+        <circle cx="7" cy="7" r="2.5" fill="rgba(131,58,180,0.35)"/>
+        <line x1="10" y1="10" x2="13.5" y2="13.5" stroke="#2a0a1a" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Text">
+      <svg viewBox="0 0 16 16">
+        <text x="8" y="12.5" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#5a1732" stroke="#2a0a1a" stroke-width="0.2">A</text>
+      </svg>
+    </span>
+
+    <span class="pw-icon" title="Line">
+      <svg viewBox="0 0 16 16">
+        <line x1="3" y1="12.5" x2="13" y2="3.5" stroke="#5a1732" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="3" cy="12.5" r="1" fill="#5a1732"/>
+        <circle cx="13" cy="3.5" r="1" fill="#5a1732"/>
+      </svg>
+    </span>
+
+  </div>
+
+  <div class="mascot" id="mascot" role="button" tabindex="0" aria-label="Tap to hear a fact">
+    <img class="mascot-sprite" id="mascotSprite"
+         src="images/artsy/frame1.png" alt="" draggable="false" />
+    <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite"></div>
+  </div>
 </div>
           <div class="mascot" id="mascot" role="button" tabindex="0" aria-label="Tap to hear a fact">
             <img class="mascot-sprite" id="mascotSprite"
