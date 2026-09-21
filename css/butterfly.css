@@ -233,9 +233,9 @@ body {
 
 /* Per-swipe sizing */
 .swipe--business {
-  width: 100%;
-  max-width: 280px;
-  height: 110px;
+  width: 101%;
+  max-width: 136px;
+  height: 70px;
 }
 
 .group--social .swipe {
@@ -244,8 +244,8 @@ body {
 }
 
 .swipe--website {
-  width: 200px;
-  height: 200px;
+  width: 157px;
+  height: 85px;
 }
 
 /* ---------- Cursive text overlay ---------- */
@@ -361,11 +361,11 @@ body {
 /* ---------- Win98 paint window ---------- */
 .paint-window {
   position: absolute;
-  left: 85%;
-  bottom: 6%;
+  left: 86%;
+  bottom: 7%;
   transform: translateX(-50%);
-  width: 120px; 
-  min-height: 100px;   
+  width: 156px; 
+  min-height: 171px;   
   max-width: 125px;
   background: rgba(212, 176, 192, 0.15);
   backdrop-filter: blur(10px);
@@ -441,8 +441,8 @@ body {
 
 .mascot {
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: 82px;
+  height: 101px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
