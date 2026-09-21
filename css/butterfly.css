@@ -361,8 +361,8 @@ body {
 /* ---------- Win98 paint window ---------- */
 .paint-window {
   position: absolute;
-  left: 86%;
-  bottom: 7%;
+  left: 76%;
+  bottom: -32%;
   transform: translateX(-50%);
   width: 156px; 
   min-height: 171px;   
@@ -442,7 +442,7 @@ body {
 .mascot {
   position: relative;
   width: 82px;
-  height: 101px;
+  height: 108px;
   cursor: pointer;
   display: flex;
   align-items: flex-end;
